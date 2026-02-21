@@ -1,8 +1,9 @@
 import { Suspense, lazy, useContext, useEffect } from "react";
 import { Routes, Route, Outlet, Navigate, useLocation } from "react-router-dom";
+import styles from "./App.module.scss";
 
 // layouts
-import { Footer, Navbar, ProfileLayout } from "./layouts";
+import { Footer, ProfileTopbar } from "./layouts";
 
 // microInteraction
 import { Loading } from "./microInteraction";
@@ -82,12 +83,14 @@ const MainLayout = () => {
   }, [isomegaPage]);
 
   return (
-    <div>
-      <Navbar />
-      <div className={`page ${isomegaPage ? 'omega-page' : ''}`}>
-        <Outlet />
+    <div className={styles.mainLayout}>
+      <div className={styles.siteShell}>
+        <ProfileTopbar />
+        <div className={`${styles.pageBody} page ${isomegaPage ? 'omega-page' : ''}`}>
+          <Outlet />
+        </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
   );
 };
@@ -121,80 +124,6 @@ function App() {
             <Route path="/Alumni" element={<Alumni />} />
             <Route path="/verify/certificate" element={<VerifyCertificate />} />
             {/* <Route path="/Omega" element={<Omega />} /> */}
-            {/* Route After Login */}
-            {authCtx.isLoggedIn && (
-              <Route path="/profile" element={<Profile />}>
-                <Route
-                  path=""
-                  element={<ProfileView editmodal="/profile/" />}
-                />
-                {authCtx.user.access === "ADMIN" ? (
-                  <Route path="events" element={<ViewEvent />} />
-                ) : (
-                  <>
-                    <Route path="events" element={<EventsView />} />
-                    <Route path="certificates" element={<CertificatesView />} />
-                  </>
-                )}
-                <Route path="Form" element={<NewForm />} />
-
-                {authCtx.user.access === "ADMIN" && (
-                  <Route path="members" element={<ViewMember />} />
-                )}
-
-                {/* blog access to this mail*/}
-
-                {(authCtx.user.access === "ADMIN" ||
-                  authCtx.user.access === "SENIOR_EXECUTIVE_CREATIVE") && (
-                    <Route path="BlogForm" element={<BlogForm />} />
-                  )}
-                {/* Certificates Route */}
-
-                {authCtx.user.access === "ADMIN" && (
-                  <Route path="certificates" element={<CertificatesView />} />
-                )}
-
-                {authCtx.user.access === "ADMIN" && (
-                  <Route
-                    path="events/SendCertificate/:eventId"
-                    element={<SendCertificate />}
-                  />
-                )}
-
-                {authCtx.user.access === "ADMIN" && (
-                  <Route
-                    path="events/createCertificates/:eventId"
-                    element={<CertificatesForm />}
-                  />
-                )}
-
-                {authCtx.user.access === "ADMIN" && (
-                  <Route
-                    path="events/viewCertificates/:eventId"
-                    element={<CertificatesPreview />}
-                  />
-                )}
-
-                <Route
-                  path="events/:eventId"
-                  element={[<EventModal onClosePath="/profile/events" />]}
-                />
-                {authCtx.user.access !== "USER" && (
-                  <Route
-                    path="events/Analytics/:eventId"
-                    element={[<EventStats onClosePath="/profile/events" />]}
-                  />
-                )}
-                {authCtx.user.access === "USER" &&
-                  authCtx.user.email == "attendance@fedkiit.com" && (
-                    <Route
-                      path="events/Analytics/:eventId"
-                      element={[<EventStats onClosePath="/profile/events" />]}
-                    />
-                  )}
-                <Route path="/profile/attendance" element={<AttendancePage />} />
-              </Route>
-            )}
             <Route
               path="/Events/:eventId"
               element={[<Event />, <EventModal onClosePath="/Events" />]}
@@ -223,6 +152,74 @@ function App() {
             />
             <Route path="*" element={<Error />} />
           </Route>
+
+          {authCtx.isLoggedIn && (
+            <Route path="/profile" element={<Profile />}>
+              <Route path="" element={<ProfileView editmodal="/profile/" />} />
+              {authCtx.user.access === "ADMIN" ? (
+                <Route path="events" element={<ViewEvent />} />
+              ) : (
+                <>
+                  <Route path="events" element={<EventsView />} />
+                  <Route path="certificates" element={<CertificatesView />} />
+                </>
+              )}
+              <Route path="Form" element={<NewForm />} />
+
+              {authCtx.user.access === "ADMIN" && (
+                <Route path="members" element={<ViewMember />} />
+              )}
+
+              {(authCtx.user.access === "ADMIN" ||
+                authCtx.user.access === "SENIOR_EXECUTIVE_CREATIVE") && (
+                <Route path="BlogForm" element={<BlogForm />} />
+              )}
+
+              {authCtx.user.access === "ADMIN" && (
+                <Route path="certificates" element={<CertificatesView />} />
+              )}
+
+              {authCtx.user.access === "ADMIN" && (
+                <Route
+                  path="events/SendCertificate/:eventId"
+                  element={<SendCertificate />}
+                />
+              )}
+
+              {authCtx.user.access === "ADMIN" && (
+                <Route
+                  path="events/createCertificates/:eventId"
+                  element={<CertificatesForm />}
+                />
+              )}
+
+              {authCtx.user.access === "ADMIN" && (
+                <Route
+                  path="events/viewCertificates/:eventId"
+                  element={<CertificatesPreview />}
+                />
+              )}
+
+              <Route
+                path="events/:eventId"
+                element={[<EventModal onClosePath="/profile/events" />]}
+              />
+              {authCtx.user.access !== "USER" && (
+                <Route
+                  path="events/Analytics/:eventId"
+                  element={[<EventStats onClosePath="/profile/events" />]}
+                />
+              )}
+              {authCtx.user.access === "USER" &&
+                authCtx.user.email == "attendance@fedkiit.com" && (
+                  <Route
+                    path="events/Analytics/:eventId"
+                    element={[<EventStats onClosePath="/profile/events" />]}
+                  />
+                )}
+              <Route path="/profile/attendance" element={<AttendancePage />} />
+            </Route>
+          )}
 
           {/* Routes for Authentication witout Navbar and footer */}
           <Route element={<AuthLayout />}>

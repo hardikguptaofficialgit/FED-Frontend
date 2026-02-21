@@ -487,7 +487,6 @@ const SignUp = () => {
                     fontSize: "0.774rem",
                     textAlign: "center",
                     marginLeft: "5px",
-                    textAlign: "center",
                   }}
                 >
                   Agree to FED's

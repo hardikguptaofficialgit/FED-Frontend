@@ -376,8 +376,7 @@ const Chatbot = () => {
                     onClick={toggleChatbot}
                     aria-label="Open Chat"
                 >
-                    <BiSolidMessageSquareDetail size={38} />
-                    <div className={styles.pulseRing}></div>
+                    <BiSolidMessageSquareDetail size={30} />
                 </button>
             )}
 
