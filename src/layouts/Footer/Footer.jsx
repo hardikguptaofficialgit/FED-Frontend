@@ -11,14 +11,19 @@ import {
 import { FaXTwitter } from "react-icons/fa6";
 
 import styles from "./styles/Footer.module.scss";
+import footerBgImage from "../../assets/images/herobgimage.png";
 
 export default function Footer() {
   const location = useLocation();
   const isOmega = location.pathname.includes("/Omega");
+  const currentYear = new Date().getFullYear();
 
   return (
     <section id={styles.footer}>
-      <footer className={styles.f1}>
+      <footer
+        className={styles.f1}
+        style={{ "--footer-bg-image": `url(${footerBgImage})` }}
+      >
         <div className={styles.logodiv}>
           <img
             className={styles.fedlogo}
@@ -202,7 +207,9 @@ export default function Footer() {
               </Link>
             </div>
             <div className={styles.tnpMDiv}>
-              <p className={styles.copyrightPTag}>© 2024, fedkiit</p>
+              <p className={styles.copyrightPTag}>
+                © {currentYear}, FEDKIIT
+              </p>
             </div>
             {/* <div className={styles.dotDiv}></div> */}
           </div>

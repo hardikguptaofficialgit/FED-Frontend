@@ -11,7 +11,7 @@
   box-sizing: border-box;
   font-family: "Open Sans", sans-serif;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 106, 0, 0.95) rgba(255, 255, 255, 0.04);
+  scrollbar-color: rgba(255, 106, 0, 0.95) #000000;
 }
 
 .react-date-picker__wrapper {
@@ -24,12 +24,12 @@ html {
 
 /* chrome, edge, safari */
 *::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 2px;
+  height: 2px;
 }
 
 *::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.04);
+  background: #000000;
 }
 
 *::-webkit-scrollbar-thumb {
@@ -61,6 +61,17 @@ body.fed-modal-open {
   overflow: hidden;
 }
 
+html.route-scrollbar-hidden,
+body.route-scrollbar-hidden {
+  scrollbar-width: none;
+}
+
+html.route-scrollbar-hidden::-webkit-scrollbar,
+body.route-scrollbar-hidden::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
 .page {
   display: flex;
   flex-direction: column;
@@ -80,9 +91,11 @@ body.fed-modal-open {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   background-color: $page-color;
   overflow: hidden;
+  width: 100vw;
+  min-height: 100vh;
 }
 
 .pageExt {

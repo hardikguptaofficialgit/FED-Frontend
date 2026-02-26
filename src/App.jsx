@@ -69,6 +69,14 @@ const AttendancePage = lazy(() => import('./pages/AttendancePage/AttendancePage'
 const MainLayout = () => {
   const location = useLocation();
   const isomegaPage = location.pathname === "/omega";
+  const path = location.pathname.toLowerCase();
+  const hideScrollbarOnRoute =
+    path === "/" ||
+    path.startsWith("/events") ||
+    path.startsWith("/social") ||
+    path.startsWith("/team") ||
+    path.startsWith("/blog") ||
+    path.startsWith("/blogs");
 
   useEffect(() => {
     if (isomegaPage) {
@@ -77,10 +85,20 @@ const MainLayout = () => {
       document.body.style.backgroundColor = "";
     }
 
+    if (hideScrollbarOnRoute) {
+      document.body.classList.add("route-scrollbar-hidden");
+      document.documentElement.classList.add("route-scrollbar-hidden");
+    } else {
+      document.body.classList.remove("route-scrollbar-hidden");
+      document.documentElement.classList.remove("route-scrollbar-hidden");
+    }
+
     return () => {
       document.body.style.backgroundColor = "";
+      document.body.classList.remove("route-scrollbar-hidden");
+      document.documentElement.classList.remove("route-scrollbar-hidden");
     };
-  }, [isomegaPage]);
+  }, [isomegaPage, hideScrollbarOnRoute]);
 
   return (
     <div className={styles.mainLayout}>

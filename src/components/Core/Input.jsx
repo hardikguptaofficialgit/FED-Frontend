@@ -54,55 +54,59 @@ CustomInput.propTypes = {
 const customStyles = {
   control: (provided) => ({
     ...provided,
-    display: "flex",
-    outline: "none",
-    width: "99.5%",
-    fontSize: "12px",
-    backgroundColor: "transparent",
-    borderRadius: "4px",
+    minHeight: "48px",
+    borderRadius: "999px",
     color: "#fff",
-    marginBottom: "0",
-    maxHeight: "40px",
-    marginLeft: "8px",
-    marginRight: "8px",
-    marginTop: "4px",
-    position: "relative",
-    border: "1px solid rgba(211, 211, 211, 0.5)",
+    fontSize: "0.95rem",
+    background:
+      "linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02))",
+    border: "1px solid rgba(255, 255, 255, 0.2)",
     boxShadow: "none",
+    cursor: "pointer",
     "&:hover": {
-      borderColor: "#fff !important",
+      borderColor: "rgba(255, 255, 255, 0.2)",
     },
+  }),
+  valueContainer: (provided) => ({
+    ...provided,
+    padding: "0 16px",
   }),
   menu: (provided) => ({
     ...provided,
-    width: "99.5%",
-    marginLeft: "8px",
+    marginTop: "8px",
+    borderRadius: "20px",
+    border: "1px solid rgba(255, 255, 255, 0.18)",
+    background:
+      "linear-gradient(145deg, rgba(16, 19, 28, 0.98), rgba(12, 16, 24, 0.96))",
+    overflow: "hidden",
   }),
   menuPortal: (provided) => ({ ...provided, zIndex: 111 }),
+  menuList: (provided) => ({
+    ...provided,
+    padding: "6px",
+  }),
   placeholder: (provided) => ({
     ...provided,
-    display: "flex",
-    alignItems: "center",
-    marginTop: "-7px",
+    color: "rgba(255, 255, 255, 0.5)",
   }),
   option: (provided, state) => ({
     ...provided,
-    color: state.isSelected ? "#FF8A00" : "#2D2D2D",
-    backgroundColor: state.isSelected ? "#2D2D2D" : "#fff",
+    color: state.isSelected ? "#ffffff" : "rgba(255, 255, 255, 0.9)",
+    background: state.isSelected
+      ? "linear-gradient(140deg, #ff8a3d, #ff5f1f)"
+      : "transparent",
     cursor: "pointer",
-    width: "99%",
-    border: "none",
-    margin: "0 auto",
-    borderRadius: "4px",
+    borderRadius: "12px",
+    margin: "2px 0",
+    fontSize: "0.92rem",
     "&:hover": {
-      transition: "ease-in-out 0.3s",
-      backgroundColor: "#2D2D2D",
-      color: "#FF8A00",
-      margin: "2px auto",
+      background: state.isSelected
+        ? "linear-gradient(140deg, #ff8a3d, #ff5f1f)"
+        : "rgba(255, 255, 255, 0.08)",
+      color: "#fff",
     },
     "&:active": {
-      backgroundColor: "#2D2D2D",
-      color: "#FF8A00",
+      background: "rgba(255, 255, 255, 0.12)",
     },
   }),
   indicatorSeparator: (provided) => ({
@@ -112,25 +116,14 @@ const customStyles = {
   singleValue: (provided) => ({
     ...provided,
     color: "#fff",
-    display: "flex",
-    alignItems: "center",
-    marginTop: "-7px",
-    fontSize:"larger"
+    fontSize: "0.95rem",
   }),
 };
 
 const DropdownIndicator = (props) => {
   return (
     <components.DropdownIndicator {...props}>
-      <AiOutlineDown
-        color="#fff"
-        size={20}
-        style={{
-          position: "absolute",
-          right: "12px",
-          top: "25%",
-        }}
-      />
+      <AiOutlineDown color="#fff" size={18} />
     </components.DropdownIndicator>
   );
 };
