@@ -1,13 +1,15 @@
 import { Suspense, lazy, useContext, useEffect } from "react";
 import { Routes, Route, Outlet, Navigate, useLocation } from "react-router-dom";
+import styles from "./App.module.scss";
 
 // layouts
-import { Footer, Navbar, ProfileLayout } from "./layouts";
+import { Footer, ProfileTopbar } from "./layouts";
 
 // microInteraction
 import { Loading } from "./microInteraction";
 
-// modals (EventModal now replaced by EventDetailPage for routing)
+// modals
+import { EventModal } from "./features";
 
 //blog
 import FullBlog from "./pages/Blog/FullBlog";
@@ -38,8 +40,6 @@ const Home = lazy(() => import("./pages/Home/Home"));
 const Event = lazy(() => import("./pages/Event/Event"));
 const PastEvent = lazy(() => import("./pages/Event/PastEvent"));
 const EventForm = lazy(() => import("./pages/Event/EventForm"));
-const EventDetailPage = lazy(() => import("./pages/Event/EventDetailPage"));
-const EventRegisterPage = lazy(() => import("./pages/Event/EventRegisterPage"));
 const Social = lazy(() => import("./pages/Social/Social"));
 const Team = lazy(() => import("./pages/Team/Team"));
 const Alumni = lazy(() => import("./pages/Alumni/Alumni"));
@@ -69,6 +69,14 @@ const AttendancePage = lazy(() => import('./pages/AttendancePage/AttendancePage'
 const MainLayout = () => {
   const location = useLocation();
   const isomegaPage = location.pathname === "/omega";
+  const path = location.pathname.toLowerCase();
+  const hideScrollbarOnRoute =
+    path === "/" ||
+    path.startsWith("/events") ||
+    path.startsWith("/social") ||
+    path.startsWith("/team") ||
+    path.startsWith("/blog") ||
+    path.startsWith("/blogs");
 
   useEffect(() => {
     if (isomegaPage) {
@@ -77,18 +85,30 @@ const MainLayout = () => {
       document.body.style.backgroundColor = "";
     }
 
+    if (hideScrollbarOnRoute) {
+      document.body.classList.add("route-scrollbar-hidden");
+      document.documentElement.classList.add("route-scrollbar-hidden");
+    } else {
+      document.body.classList.remove("route-scrollbar-hidden");
+      document.documentElement.classList.remove("route-scrollbar-hidden");
+    }
+
     return () => {
       document.body.style.backgroundColor = "";
+      document.body.classList.remove("route-scrollbar-hidden");
+      document.documentElement.classList.remove("route-scrollbar-hidden");
     };
-  }, [isomegaPage]);
+  }, [isomegaPage, hideScrollbarOnRoute]);
 
   return (
-    <div>
-      <Navbar />
-      <div className={`page ${isomegaPage ? 'omega-page' : ''}`}>
-        <Outlet />
+    <div className={styles.mainLayout}>
+      <div className={styles.siteShell}>
+        <ProfileTopbar />
+        <div className={`${styles.pageBody} page ${isomegaPage ? 'omega-page' : ''}`}>
+          <Outlet />
+        </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
   );
 };
@@ -122,108 +142,26 @@ function App() {
             <Route path="/Alumni" element={<Alumni />} />
             <Route path="/verify/certificate" element={<VerifyCertificate />} />
             {/* <Route path="/Omega" element={<Omega />} /> */}
-            {/* Route After Login */}
-            {authCtx.isLoggedIn && (
-              <Route path="/profile" element={<Profile />}>
-                <Route
-                  path=""
-                  element={<ProfileView editmodal="/profile/" />}
-                />
-                {authCtx.user.access === "ADMIN" ? (
-                  <Route path="events" element={<ViewEvent />} />
-                ) : (
-                  <>
-                    <Route path="events" element={<EventsView />} />
-                    <Route path="certificates" element={<CertificatesView />} />
-                  </>
-                )}
-                <Route path="Form" element={<NewForm />} />
-
-                {authCtx.user.access === "ADMIN" && (
-                  <Route path="members" element={<ViewMember />} />
-                )}
-
-                {/* blog access to this mail*/}
-
-                {(authCtx.user.access === "ADMIN" ||
-                  authCtx.user.access === "SENIOR_EXECUTIVE_CREATIVE") && (
-                    <Route path="BlogForm" element={<BlogForm />} />
-                  )}
-                {/* Certificates Route */}
-
-                {authCtx.user.access === "ADMIN" && (
-                  <Route path="certificates" element={<CertificatesView />} />
-                )}
-
-                {authCtx.user.access === "ADMIN" && (
-                  <Route
-                    path="events/SendCertificate/:eventId"
-                    element={<SendCertificate />}
-                  />
-                )}
-
-                {authCtx.user.access === "ADMIN" && (
-                  <Route
-                    path="events/createCertificates/:eventId"
-                    element={<CertificatesForm />}
-                  />
-                )}
-
-                {authCtx.user.access === "ADMIN" && (
-                  <Route
-                    path="events/viewCertificates/:eventId"
-                    element={<CertificatesPreview />}
-                  />
-                )}
-
-                <Route
-                  path="events/:eventId"
-                  element={<EventDetailPage />}
-                />
-                {authCtx.user.access !== "USER" && (
-                  <Route
-                    path="events/Analytics/:eventId"
-                    element={[<EventStats onClosePath="/profile/events" />]}
-                  />
-                )}
-                {authCtx.user.access === "USER" &&
-                  authCtx.user.email == "attendance@fedkiit.com" && (
-                    <Route
-                      path="events/Analytics/:eventId"
-                      element={[<EventStats onClosePath="/profile/events" />]}
-                    />
-                  )}
-                <Route path="/profile/attendance" element={<AttendancePage />} />
-              </Route>
-            )}
             <Route
               path="/Events/:eventId"
-              element={<EventDetailPage />}
+              element={[<Event />, <EventModal onClosePath="/Events" />]}
             />
             <Route
               path="/Events/pastEvents/:eventId"
-              element={<EventDetailPage />}
+              element={[<Event />, <EventModal onClosePath="/Events" />]}
             />
             <Route
               path="pastEvents/:eventId"
-              element={<EventDetailPage />}
+              element={[
+                <PastEvent />,
+                <EventModal onClosePath="/Events/pastEvents" />,
+              ]}
             />
 
-            {/* Dedicated registration page (replaces the old EventForm popup) */}
             <Route
-              path="/Events/:eventId/Form"
-              element={<EventRegisterPage />}
-            />
-            <Route
-              path="/Events/:eventId/Register"
-              element={<EventRegisterPage />}
-            />
-
-            {/* Old popup-based register route — commented out in favour of EventRegisterPage */}
-            {/* <Route
               path="/Events/:eventId/Form"
               element={[<Event />, <EventForm />]}
-            /> */}
+            />
 
             <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
             <Route
@@ -232,6 +170,74 @@ function App() {
             />
             <Route path="*" element={<Error />} />
           </Route>
+
+          {authCtx.isLoggedIn && (
+            <Route path="/profile" element={<Profile />}>
+              <Route path="" element={<ProfileView editmodal="/profile/" />} />
+              {authCtx.user.access === "ADMIN" ? (
+                <Route path="events" element={<ViewEvent />} />
+              ) : (
+                <>
+                  <Route path="events" element={<EventsView />} />
+                  <Route path="certificates" element={<CertificatesView />} />
+                </>
+              )}
+              <Route path="Form" element={<NewForm />} />
+
+              {authCtx.user.access === "ADMIN" && (
+                <Route path="members" element={<ViewMember />} />
+              )}
+
+              {(authCtx.user.access === "ADMIN" ||
+                authCtx.user.access === "SENIOR_EXECUTIVE_CREATIVE") && (
+                <Route path="BlogForm" element={<BlogForm />} />
+              )}
+
+              {authCtx.user.access === "ADMIN" && (
+                <Route path="certificates" element={<CertificatesView />} />
+              )}
+
+              {authCtx.user.access === "ADMIN" && (
+                <Route
+                  path="events/SendCertificate/:eventId"
+                  element={<SendCertificate />}
+                />
+              )}
+
+              {authCtx.user.access === "ADMIN" && (
+                <Route
+                  path="events/createCertificates/:eventId"
+                  element={<CertificatesForm />}
+                />
+              )}
+
+              {authCtx.user.access === "ADMIN" && (
+                <Route
+                  path="events/viewCertificates/:eventId"
+                  element={<CertificatesPreview />}
+                />
+              )}
+
+              <Route
+                path="events/:eventId"
+                element={[<EventModal onClosePath="/profile/events" />]}
+              />
+              {authCtx.user.access !== "USER" && (
+                <Route
+                  path="events/Analytics/:eventId"
+                  element={[<EventStats onClosePath="/profile/events" />]}
+                />
+              )}
+              {authCtx.user.access === "USER" &&
+                authCtx.user.email == "attendance@fedkiit.com" && (
+                  <Route
+                    path="events/Analytics/:eventId"
+                    element={[<EventStats onClosePath="/profile/events" />]}
+                  />
+                )}
+              <Route path="/profile/attendance" element={<AttendancePage />} />
+            </Route>
+          )}
 
           {/* Routes for Authentication witout Navbar and footer */}
           <Route element={<AuthLayout />}>

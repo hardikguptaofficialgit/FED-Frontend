@@ -36,6 +36,13 @@ const EditProfile = ({ handleModalClose }) => {
     AOS.init({ duration: 2000 });
   }, []);
 
+  useEffect(() => {
+    document.body.classList.add("fed-modal-open");
+    return () => {
+      document.body.classList.remove("fed-modal-open");
+    };
+  }, []);
+
   const validate = () => {
     const newErrors = {};
     if (!data.rollNumber) newErrors.rollNumber = "Roll Number is required";
@@ -130,39 +137,9 @@ const EditProfile = ({ handleModalClose }) => {
   };
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        width: "100%",
-        height: "100%",
-        zIndex: "20",
-        left: "0",
-        top: "0",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          top: "0",
-          left: "0",
-          width: "100%",
-          height: "100%",
-          background: "rgba(0, 0, 0, 0.5)",
-          backdropFilter: "blur(4px)",
-          zIndex: "15",
-        }}
-      >
-        <div
-          style={{
-            zIndex: "10",
-            borderRadius: "10px",
-            position: "relative",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            scale: "0.8",
-          }}
-        >
+    <div className={styles.modalRoot}>
+      <div className={styles.modalOverlay}>
+        <div className={styles.modalDialog}>
           <>
             <div className={styles.flex}>
               <div
@@ -177,6 +154,7 @@ const EditProfile = ({ handleModalClose }) => {
                     </h3>
                   </div>
                   <button
+                    type="button"
                     className={styles.closeModal}
                     onClick={handleModalClose}
                   >

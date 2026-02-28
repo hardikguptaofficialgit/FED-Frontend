@@ -153,19 +153,18 @@ const Events = () => {
 
   return (
     <div className={styles.participatedEvents}>
-      {authCtx.user.access !== "USER" ? (
-        <div className={styles.proHeading}>
+      <div className={styles.proHeading}>
+        {authCtx.user.access !== "USER" ? (
           <h3 className={styles.headInnerText}>
             <span>Events</span> Timeline
           </h3>
-        </div>
-      ) : (
-        <div className={styles.proHeading}>
+        ) : (
           <h3 className={styles.headInnerText}>
             <span>Participated</span> Events
           </h3>
-        </div>
-      )}
+        )}
+        <div className={styles.countBadge}>{events.length} events</div>
+      </div>
 
       {isLoading ? (
         <ComponentLoading />
@@ -173,60 +172,45 @@ const Events = () => {
         <>
           {error && <div className={styles.error}>{error.message}</div>}
 
-          <div className={styles.tables}>
+          <div className={styles.tableCard}>
+            <div className={styles.timelineLine} />
+            <div className={styles.tables}>
             {events.length > 0 ? (
               <table className={styles.eventsTable}>
                 <thead>
                   <tr>
-                    <th className={styles.mobilewidth}>Event Name</th>
-                    <th className={styles.mobilewidth}>Event Date</th>
-                    <th className={styles.mobilewidth}>Details</th>
-                    <th className={styles.mobilewidth}>Certificate</th>
+                    <th>Event</th>
+                    <th>Date</th>
+                    <th>Details</th>
+                    {authCtx.user.access === "USER" && <th>Certificate</th>}
                     {(analyticsAccessRoles.includes(authCtx.user.access) ||
                       authCtx.user.email == "srex@fedkiit.com") && (
-                      <th
-                        className={styles.mobilewidth}
-                        style={{ paddingTop: "1rem" }}
-                      >
-                        Registrations
-                      </th>
+                      <th>Registrations</th>
                     )}
                   </tr>
                 </thead>
 
                 <tbody>
                   {events.map((event) => (
-                    <tr key={event._id || event.id}>
-                      <td
-                        className={styles.mobilewidth}
-                        style={{ fontWeight: "500", paddingRight: "10px" }}
-                      >
+                    <tr key={event._id || event.id} className={styles.row}>
+                      <td className={styles.eventNameCell}>
+                        <span className={styles.rowDot} />
                         {event.info.eventTitle}
                       </td>
-                      <td style={{ fontWeight: "200" }}>
+                      <td className={styles.eventDateCell}>
                         {formatDate(event.info.eventDate)}
                       </td>
 
                       {/* View Event Details - accessible to all */}
-                      <td className={styles.mobilewidthtd}>
+                      <td>
                         <Link to={`${viewPath}/${event.id}`}>
-                          <button
-                            className={styles.viewButton}
-                            style={{
-                              marginLeft: "auto",
-                              whiteSpace: "nowrap",
-                              height: "fit-content",
-                              color: "orange",
-                            }}
-                          >
-                            View
-                          </button>
+                          <button className={styles.viewButton}>View</button>
                         </Link>
                       </td>
 
                       {/* Certificate - only for USERS */}
                       {authCtx.user.access === "USER" && (
-                        <td className={styles.mobilewidthtd}>
+                        <td>
                           {loadingCerts ? (
                             <div className={styles.loadingContainer}>
                               <MicroLoading />
@@ -245,7 +229,7 @@ const Events = () => {
                             <button
                               className={styles.viewButton}
                               disabled
-                              style={{ opacity: 0.5 }}
+                              title="Certificate has not been issued yet"
                             >
                               Not Issued
                             </button>
@@ -256,19 +240,9 @@ const Events = () => {
                       {/* Analytics - only for admins and specific roles */}
                       {(analyticsAccessRoles.includes(authCtx.user.access) ||
                         authCtx.user.email === "srex@fedkiit.com") && (
-                        <td className={styles.mobilewidthtd}>
+                        <td>
                           <Link to={`${analyticsPath}/${event.id}`}>
-                            <button
-                              className={styles.viewButton}
-                              style={{
-                                marginLeft: "auto",
-                                whiteSpace: "nowrap",
-                                height: "fit-content",
-                                color: "orange",
-                              }}
-                            >
-                              View
-                            </button>
+                            <button className={styles.viewButton}>View</button>
                           </Link>
                         </td>
                       )}
@@ -279,6 +253,7 @@ const Events = () => {
             ) : (
               <p className={styles.noEvents}>Not participated in any Events</p>
             )}
+            </div>
           </div>
         </>
       )}

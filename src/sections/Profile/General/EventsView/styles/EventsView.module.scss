@@ -1,204 +1,188 @@
 .participatedEvents {
-  color: #ffffff;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 300;
+  color: #e5e7eb;
+  font-family: "Poppins", sans-serif;
   display: flex;
   flex-direction: column;
-  padding-left: 0px;
-  padding-top: 35px;
-  padding-bottom: 27px;
-  height: auto;
-
-  .error {
-    padding: 30px 70px;
-    z-index: 1;
-    text-align: center;
-    margin-top: 2rem;
-    font-size: 1.2rem;
-    font-weight: 400;
-    margin-bottom: 1rem;
-  }
-
-  .proHeading {
-    font-size: 30px;
-    letter-spacing: 0.02em;
-    line-height: 40px;
-    margin-bottom: 50px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .headInnerText span {
-    margin-right: 3px;
-    background: linear-gradient(to right, #d03e21 40%, #ff8a00);
-    -webkit-background-clip: text;
-    color: transparent;
-  }
-
-  .headInnerText {
-    margin-left: 10.5rem;
-  }
-
-  .tables {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    width: 60%;
-    margin-left: 10.5rem;
-  }
-
-  .eventsTable {
-    width: 100%;
-    border-collapse: collapse;
-
-    th {
-      border-bottom: 2px solid grey;
-      padding-bottom: 10px;
-      padding-top: 5px;
-      font-size: 20px;
-    }
-
-    td {
-      font-size: 15px;
-    }
-
-    th,
-    td {
-      text-align: center;
-      width: 34%;
-    }
-  }
-
-  .eventsTable thead,
-  .eventsTable tbody tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-  }
-
-  .eventsTable tbody {
-    display: block;
-    max-height: 360px;
-    overflow-y: scroll;
-    scrollbar-width: none;
-    width: 100%;
-  }
-
-  .mobilewidth {
-    width: 100%;
-    overflow-x: auto;
-  }
-
-  .noEvents {
-    text-align: center;
-    font-size: 25px;
-    font-weight: 700;
-    color: grey;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    margin: auto;
-  }
+  padding: 30px 0 26px;
+  gap: 18px;
 }
 
-@media screen and (max-width: 989px) {
-  .participatedEvents .tables {
-    margin-left: 5rem;
-  }
-
-  .participatedEvents .headInnerText {
-    margin-left: 5rem;
-  }
+.error {
+  padding: 16px 20px;
+  text-align: center;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  background: rgba(127, 29, 29, 0.2);
+  border-radius: 10px;
+  font-size: 0.95rem;
 }
 
-@media screen and (max-width: 867px) {
-  .participatedEvents .tables {
-    margin-left: 2rem;
-  }
+.proHeading {
+  width: min(1100px, calc(100% - 2rem));
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
 
-  .participatedEvents .headInnerText {
-    margin-left: 2rem;
-  }
+.headInnerText {
+  margin: 0;
+  font-size: clamp(1.6rem, 2.2vw, 2rem);
+  letter-spacing: 0.02em;
+}
+
+.headInnerText span {
+  margin-right: 4px;
+  background: linear-gradient(to right, #d03e21 40%, #ff8a00);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.countBadge {
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid rgba(251, 146, 60, 0.45);
+  background: rgba(194, 65, 12, 0.2);
+  color: #fed7aa;
+  white-space: nowrap;
+}
+
+.tableCard {
+  width: min(1100px, calc(100% - 2rem));
+  margin: 0 auto;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(2, 6, 23, 0.92));
+  position: relative;
+  overflow: hidden;
+}
+
+.timelineLine {
+  position: absolute;
+  left: 27px;
+  top: 54px;
+  bottom: 14px;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(251, 146, 60, 0.5), rgba(59, 130, 246, 0.15));
+  pointer-events: none;
+}
+
+.tables {
+  width: 100%;
+  overflow-x: auto;
+  padding-left: 12px;
+}
+
+.eventsTable {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.eventsTable thead th {
+  text-align: left;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  font-weight: 600;
+  padding: 16px 14px;
+  position: sticky;
+  top: 0;
+  background: rgba(15, 23, 42, 0.96);
+  z-index: 2;
+}
+
+.eventsTable tbody td {
+  padding: 14px;
+  border-top: 1px solid rgba(148, 163, 184, 0.15);
+  font-size: 0.92rem;
+}
+
+.row:hover {
+  background: rgba(30, 41, 59, 0.42);
+}
+
+.eventNameCell {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.eventDateCell {
+  color: #cbd5e1;
+}
+
+.rowDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fb923c;
+  box-shadow: 0 0 0 4px rgba(251, 146, 60, 0.2);
+  flex-shrink: 0;
+}
+
+.viewButton {
+  border: 1px solid rgba(251, 146, 60, 0.45);
+  background: rgba(251, 146, 60, 0.14);
+  color: #fdba74;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+  white-space: nowrap;
+}
+
+.viewButton:hover:not(:disabled) {
+  background: rgba(251, 146, 60, 0.24);
+  border-color: rgba(251, 146, 60, 0.75);
+}
+
+.viewButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.loadingContainer {
+  min-height: 26px;
+  display: flex;
+  align-items: center;
+}
+
+.noEvents {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #94a3b8;
+  padding: 48px 20px;
 }
 
 @media screen and (max-width: 768px) {
-  .participatedEvents .headInnerText {
-    text-align: center;
-    width: 100%;
-    margin-left: 10vw;
-    margin-right: 10vw;
+  .participatedEvents {
+    padding-top: 20px;
   }
 
-  .participatedEvents .eventsTable tbody {
-    max-height: 250px;
+  .proHeading {
+    width: calc(100% - 1rem);
+    flex-wrap: wrap;
   }
 
-  .participatedEvents .proHeading {
-    margin-bottom: 20px;
+  .tableCard {
+    width: calc(100% - 1rem);
   }
 
-  .eventsTable {
-    margin-left: 3vw;
-    margin-right: 3vw;
+  .timelineLine {
+    left: 22px;
   }
 
-  .error {
-    padding: 30px 70px;
-    z-index: 1;
-    text-align: center;
-    margin-top: 10px;
-    font-size: .9rem;
-    font-weight: 400;
-    margin-bottom: 10px;
-  }
-
-  .participatedEvents .tables {
-    width: 100%;
-    margin-left: 0rem;
-  }
-
-  .noEvents {
-    font-size: 22px;
-    height: auto;
+  .tables {
+    padding-left: 6px;
   }
 }
-
-@media screen and (max-width: 515px) {
-  .participatedEvents .headInnerText {
-    margin-left: 5vw;
-    margin-right: 5vw;
-  }
-
-  .noEvents {
-    font-size: 20px;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .participatedEvents .headInnerText {
-    font-size: 30px;
-  }
-
-  .participatedEvents .eventsTable th {
-    font-size: 17px;
-  }
-
-  .error {
-    padding: 30px 70px;
-    z-index: 1;
-    text-align: center;
-    margin-top: 10px;
-    font-size: 0.9rem;
-    font-weight: 400;
-    margin-bottom: 10px;
-  }
-
-  .noEvents {
-    font-size: 18px;
-  }
-}
-

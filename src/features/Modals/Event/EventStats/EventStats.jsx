@@ -89,6 +89,13 @@ const EventStats = ({ onClosePath }) => {
     }
   }, [searchQuery]);
 
+  useEffect(() => {
+    document.body.classList.add("fed-modal-open");
+    return () => {
+      document.body.classList.remove("fed-modal-open");
+    };
+  }, []);
+
   const handleModalClose = () => {
     navigate(onClosePath);
   };
@@ -156,7 +163,7 @@ const EventStats = ({ onClosePath }) => {
         position: "fixed",
         width: "100%",
         height: "100%",
-        zIndex: "10",
+        zIndex: "1200",
         left: 0,
         top: 0,
       }}
@@ -170,14 +177,14 @@ const EventStats = ({ onClosePath }) => {
           height: "100%",
           background: "rgba(0, 0, 0, 0.5)",
           backdropFilter: "blur(4px)",
-          zIndex: "5",
+          zIndex: "1190",
           display: "flex",
           justifyContent: "center",
         }}
       >
         <div
           style={{
-            zIndex: "10",
+            zIndex: "1201",
             borderRadius: "10px",
             padding: "2rem",
             position: "relative",
