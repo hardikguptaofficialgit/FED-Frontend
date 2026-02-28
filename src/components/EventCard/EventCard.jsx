@@ -11,7 +11,7 @@ import { PiClockCountdownDuotone } from "react-icons/pi";
 import { IoIosLock, IoIosStats } from "react-icons/io";
 import { MdGroups } from "react-icons/md";
 
-import { FaUser, FaRupeeSign,FaEye} from "react-icons/fa";
+import { FaUser, FaRupeeSign, FaEye } from "react-icons/fa";
 import { QrCode } from "lucide-react";
 import { parse, differenceInMilliseconds, formatDistanceToNow } from "date-fns";
 import { Button } from "../Core";
@@ -219,7 +219,7 @@ const EventCard = (props) => {
             } else if (data?.info?.isRegistrationClosed) {
               setBtnTxt("Closed");
             } else {
-              setBtnTxt("Register Now");
+              setBtnTxt("Registe Now");
             }
           }
         }
@@ -332,14 +332,19 @@ const EventCard = (props) => {
           duration: 3000,
         });
       } else {
-        setNavigatePath("/Events/" + data.id + "/Form");
-        setTimeout(() => {
-          setShouldNavigate(true);
-        }, 1000);
+        // setNavigatePath("/Events/" + data.id + "/Form");
+        // setTimeout(() => {
+        //   setShouldNavigate(true);
+        // }, 1000);
 
         setTimeout(() => {
+          window.open("/Events/" + data.id, "_blank", "noopener,noreferrer");
           setIsMicroLoading(false);
-        }, 3000);
+        }, 1000);
+
+        // setTimeout(() => {
+        //   setIsMicroLoading(false);
+        // }, 3000);
       }
     } else {
       setIsMicroLoading(true);
@@ -369,7 +374,7 @@ const EventCard = (props) => {
         onMouseLeave={() => setisHovered(false)}
         className={style.card}
         style={customStyles.card}
-        // data-aos={aosDisable ? "" : "fade-up"}
+      // data-aos={aosDisable ? "" : "fade-up"}
       >
         <div
           className={style.backimg}
@@ -486,16 +491,16 @@ const EventCard = (props) => {
           {type === "ongoing" && showRegisterButton && (
             <div
               style={{ fontSize: ".9rem", color: "white" }}
-              // onMouseEnter={() => {
-              //   if (
-              //     btnTxt === "Locked" &&
-              //     authCtx.isLoggedIn &&
-              //     authCtx.user.access === "USER"
-              //   ) {
-              //   }
-              // }}
+            // onMouseEnter={() => {
+            //   if (
+            //     btnTxt === "Locked" &&
+            //     authCtx.isLoggedIn &&
+            //     authCtx.user.access === "USER"
+            //   ) {
+            //   }
+            // }}
             >
-              
+
               <button
                 className={style.registerbtn}
                 style={{
@@ -503,37 +508,37 @@ const EventCard = (props) => {
                   cursor: btnTxt === "Register Now" ? "pointer" : "not-allowed",
                 }}
                 onClick={handleForm}
-                // disabled={
-                //   btnTxt === "Closed" ||
-                //   btnTxt === "Locked" ||
-                //   btnTxt === "Already Registered" ||
-                //   btnTxt === "Already Member" ||
-                //   btnTxt === `${remainingTime}`
-                // }
+              // disabled={
+              //   btnTxt === "Closed" ||
+              //   btnTxt === "Locked" ||
+              //   btnTxt === "Already Registered" ||
+              //   btnTxt === "Already Member" ||
+              //   btnTxt === `${remainingTime}`
+              // }
               >
                 {btnTxt === "Closed" ? (
-  <>
-    <div style={{ fontSize: "0.9rem" }}>Closed</div>
-    <IoIosLock
-      alt=""
-      style={{ marginLeft: "0px", fontSize: "1rem" }}
-    />
-  </>
-) : btnTxt === "Already Registered" ? (
-  info.participationType === "Team" ? ( // Show Team Details only for team events
-    <>
-      <div
-        style={{ fontSize: "0.9rem", cursor: "pointer" }}
-        onClick={() => setIsTeamDetailsOpen(true)}
-      >
-        Team Details
-      </div>
-    </>
-  ) : (
-    <>
-      <div style={{ fontSize: "0.9rem" }}>Registered</div>
-    </>
-  )
+                  <>
+                    <div style={{ fontSize: "0.9rem" }}>Closed</div>
+                    <IoIosLock
+                      alt=""
+                      style={{ marginLeft: "0px", fontSize: "1rem" }}
+                    />
+                  </>
+                ) : btnTxt === "Already Registered" ? (
+                  info.participationType === "Team" ? ( // Show Team Details only for team events
+                    <>
+                      <div
+                        style={{ fontSize: "0.9rem", cursor: "pointer" }}
+                        onClick={() => setIsTeamDetailsOpen(true)}
+                      >
+                        Team Details
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div style={{ fontSize: "0.9rem" }}>Registered</div>
+                    </>
+                  )
 
 
                 ) : btnTxt === "Locked" ? (
@@ -567,7 +572,7 @@ const EventCard = (props) => {
               </button>
             </div>
           )}
-          
+
 
         </div>
         <div className={style.backtxt} style={customStyles.backtxt}>
@@ -641,7 +646,7 @@ const EventCard = (props) => {
           />
         </div>
       )}
-      
+
       {/* Team Details Modal */}
       <TeamDetailsModal
         isOpen={isTeamDetailsOpen}
@@ -649,7 +654,7 @@ const EventCard = (props) => {
         formId={data.id}
         eventTitle={info.eventTitle}
       />
-      
+
       <Alert />
     </div>
   );

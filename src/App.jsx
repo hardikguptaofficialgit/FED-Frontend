@@ -7,8 +7,7 @@ import { Footer, Navbar, ProfileLayout } from "./layouts";
 // microInteraction
 import { Loading } from "./microInteraction";
 
-// modals
-import { EventModal } from "./features";
+// modals (EventModal now replaced by EventDetailPage for routing)
 
 //blog
 import FullBlog from "./pages/Blog/FullBlog";
@@ -35,6 +34,8 @@ const Home = lazy(() => import("./pages/Home/Home"));
 const Event = lazy(() => import("./pages/Event/Event"));
 const PastEvent = lazy(() => import("./pages/Event/PastEvent"));
 const EventForm = lazy(() => import("./pages/Event/EventForm"));
+const EventDetailPage = lazy(() => import("./pages/Event/EventDetailPage"));
+const EventRegisterPage = lazy(() => import("./pages/Event/EventRegisterPage"));
 const Social = lazy(() => import("./pages/Social/Social"));
 const Team = lazy(() => import("./pages/Team/Team"));
 const Alumni = lazy(() => import("./pages/Alumni/Alumni"));
@@ -138,8 +139,8 @@ function App() {
 
                 {(authCtx.user.access === "ADMIN" ||
                   authCtx.user.access === "SENIOR_EXECUTIVE_CREATIVE") && (
-                  <Route path="BlogForm" element={<BlogForm />} />
-                )}
+                    <Route path="BlogForm" element={<BlogForm />} />
+                  )}
                 {/* Certificates Route */}
 
                 {authCtx.user.access === "ADMIN" && (
@@ -169,7 +170,7 @@ function App() {
 
                 <Route
                   path="events/:eventId"
-                  element={[<EventModal onClosePath="/profile/events" />]}
+                  element={<EventDetailPage />}
                 />
                 {authCtx.user.access !== "USER" && (
                   <Route
@@ -189,24 +190,32 @@ function App() {
             )}
             <Route
               path="/Events/:eventId"
-              element={[<Event />, <EventModal onClosePath="/Events" />]}
+              element={<EventDetailPage />}
             />
             <Route
               path="/Events/pastEvents/:eventId"
-              element={[<Event />, <EventModal onClosePath="/Events" />]}
+              element={<EventDetailPage />}
             />
             <Route
               path="pastEvents/:eventId"
-              element={[
-                <PastEvent />,
-                <EventModal onClosePath="/Events/pastEvents" />,
-              ]}
+              element={<EventDetailPage />}
             />
 
+            {/* Dedicated registration page (replaces the old EventForm popup) */}
             <Route
               path="/Events/:eventId/Form"
-              element={[<Event />, <EventForm />]}
+              element={<EventRegisterPage />}
             />
+            <Route
+              path="/Events/:eventId/Register"
+              element={<EventRegisterPage />}
+            />
+
+            {/* Old popup-based register route — commented out in favour of EventRegisterPage */}
+            {/* <Route
+              path="/Events/:eventId/Form"
+              element={[<Event />, <EventForm />]}
+            /> */}
 
             <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
             <Route
