@@ -4,35 +4,19 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 2000;
   padding: 20px;
 }
 
 .modal {
-  background: rgb(28, 28, 28);
-  border-radius: 12px;
   max-width: 600px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
   scrollbar-width: none;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
 }
 
 .modalHeader {
@@ -40,8 +24,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 0px 15px;
-  border-bottom: 1px solid #000000;
-  background: linear-gradient(135deg, #f97507 0%, #ff6b35 100%);
+  border-bottom: 1px solid rgba(255, 138, 0, 0.3);
+  background: linear-gradient(135deg, rgba(255, 138, 0, 0.9) 0%, rgba(255, 61, 127, 0.85) 100%);
   color: white;
   border-radius: 12px 12px 0 0;
 
@@ -55,7 +39,7 @@
 .closeButton {
   background: none;
   border: none;
-  color: rgb(0, 0, 0);
+  color: rgba(255, 255, 255, 0.9);
   cursor: pointer;
   padding: 8px ;
   border-radius: 50%;
@@ -65,7 +49,7 @@
   justify-content: center;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.14);
   }
 }
 

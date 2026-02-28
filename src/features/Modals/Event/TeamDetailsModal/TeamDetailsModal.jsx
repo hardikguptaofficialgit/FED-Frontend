@@ -83,8 +83,8 @@ const TeamDetailsModal = ({ isOpen, onClose, formId, eventTitle }) => {
   if (!isOpen) return null;
 
   return (
-    <div className={styles.modalOverlay} onClick={handleBackdropClick}>
-      <div className={styles.modal}>
+    <div className={`${styles.modalOverlay} fed-modal-root`} onClick={handleBackdropClick}>
+      <div className={`${styles.modal} fed-modal-surface`}>
         <div className={styles.modalHeader}>
           <h2>Team Details</h2>
           <button className={styles.closeButton} onClick={onClose}>

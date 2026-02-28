@@ -19,13 +19,13 @@ import AuthContext from "../../context/AuthContext";
 import EventCardSkeleton from "../../layouts/Skeleton/EventCard/EventCardSkeleton";
 import { Blurhash } from "react-blurhash";
 import { Alert, MicroLoading } from "../../microInteraction";
-
+import { TeamDetailsModal } from "../../features/Modals";
 // import useUnixTimestamp from "../../utils/hooks/useUnixTimeStamp";
 
 const EventCard = (props) => {
   const {
     data,
-    onOpen,
+    onOpen = () => {},
     type,
     modalpath,
     customStyles = {},
@@ -56,7 +56,7 @@ const EventCard = (props) => {
   const [navigatePath, setNavigatePath] = useState("/");
   const [isLocked, setIsLocked] = useState(false);
   const [alert, setAlert] = useState(null);
-
+  const [isTeamDetailsOpen, setIsTeamDetailsOpen] = useState(false);
 
   useEffect(() => {
     if (shouldNavigate) {
@@ -332,14 +332,10 @@ const EventCard = (props) => {
           duration: 3000,
         });
       } else {
-        setNavigatePath("/Events/" + data.id + "/Form");
         setTimeout(() => {
-          setShouldNavigate(true);
-        }, 1000);
-
-        setTimeout(() => {
+          navigate(`/Events/${data.id}/details`);
           setIsMicroLoading(false);
-        }, 3000);
+        }, 300);
       }
     } else {
       setIsMicroLoading(true);
@@ -403,7 +399,10 @@ const EventCard = (props) => {
             <div
               className={style.share}
               style={customStyles.share}
-              onClick={handleShare}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleShare();
+              }}
             >
               <img
                 className={style.shareIcon}
@@ -417,7 +416,10 @@ const EventCard = (props) => {
             <div
               className={style.qrCode}
               style={customStyles.qrCode}
-              onClick={handleQRCode}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleQRCode();
+              }}
               title="View Attendance QR Code"
             >
               <QrCode
@@ -438,7 +440,7 @@ const EventCard = (props) => {
             </span>
 
             {type === "ongoing" && (
-              <p>
+              <div className={style.eventMeta}>
                 {info.participationType === "Team" ? (
                   <>
                     <MdGroups color="#f97507" size={25} />
@@ -470,17 +472,22 @@ const EventCard = (props) => {
                   </>
                 )}
 
-                <div className={style.price} style={customStyles.price}>
+                <span className={style.price} style={customStyles.price}>
                   {info.eventAmount ? (
-                    <p style={{ font: "2rem" }}>
+                    <span className={style.priceValue} style={{ font: "2rem" }}>
                       <FaRupeeSign color="#f97507" size={15} />
                       {info.eventAmount}
-                    </p>
+                    </span>
                   ) : (
-                    <p style={{ color: "white", marginTop: "-1px" }}>Free</p>
+                    <span
+                      className={style.priceValue}
+                      style={{ color: "white", marginTop: "-1px" }}
+                    >
+                      Free
+                    </span>
                   )}
-                </div>
-              </p>
+                </span>
+              </div>
             )}
           </div>
           {type === "ongoing" && showRegisterButton && (
@@ -520,14 +527,11 @@ const EventCard = (props) => {
                     />
                   </>
                 ) : btnTxt === "Already Registered" ? (
-                  info.participationType === "Team" ? ( // Navigate to Team Management page
+                  info.participationType === "Team" ? ( // Show Team Details only for team events
                     <>
                       <div
                         style={{ fontSize: "0.9rem", cursor: "pointer" }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/Events/${data.id}/team`);
-                        }}
+                        onClick={() => setIsTeamDetailsOpen(true)}
                       >
                         Team Details
                       </div>
@@ -645,7 +649,13 @@ const EventCard = (props) => {
         </div>
       )}
 
-
+      {/* Team Details Modal */}
+      <TeamDetailsModal
+        isOpen={isTeamDetailsOpen}
+        onClose={() => setIsTeamDetailsOpen(false)}
+        formId={data.id}
+        eventTitle={info.eventTitle}
+      />
 
       <Alert />
     </div>
@@ -654,7 +664,7 @@ const EventCard = (props) => {
 
 EventCard.propTypes = {
   data: PropTypes.object.isRequired,
-  onOpen: PropTypes.func.isRequired,
+  onOpen: PropTypes.func,
   type: PropTypes.string.isRequired,
   modalpath: PropTypes.string.isRequired,
   customStyles: PropTypes.object,
