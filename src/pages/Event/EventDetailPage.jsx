@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useContext } from "react";
-import style from "./styles/EventDetailPage.module.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import shareOutline from "../../assets/images/shareOutline.svg";
 import Share from "../../features/Modals/Event/ShareModal/ShareModal";
@@ -14,7 +13,6 @@ import { Blurhash } from "react-blurhash";
 import { Alert, ComponentLoading } from "../../microInteraction";
 import { api } from "../../services";
 import { parse, differenceInMilliseconds } from "date-fns";
-import { ChatBot } from "../../features";
 
 const EventDetailPage = () => {
     useEffect(() => { window.scrollTo(0, 0); }, []);
@@ -149,199 +147,197 @@ const EventDetailPage = () => {
 
     return (
         <>
-            <ChatBot />
             <div style={pageStyle}>
-                <button style={backBtnStyle} onClick={() => navigate(-1)}>
-                    <MdArrowBackIos size={14} /> Back
-                </button>
+                <div style={innerPageWrapperStyle}>
+                    <button style={backBtnStyle} onClick={() => navigate(-1)}>
+                        <MdArrowBackIos size={14} /> Back to Events
+                    </button>
 
-                {isLoading ? (
-                    <ComponentLoading customStyles={{ width: "100%", height: "60vh", display: "flex", justifyContent: "center", alignItems: "center" }} />
-                ) : !data ? (
-                    <div style={{ color: "white", textAlign: "center", marginTop: "4rem" }}>Event not found.</div>
-                ) : (
-                    <div style={containerStyle}>
-                        {/* LEFT COLUMN */}
-                        <div style={leftColStyle}>
-                            {/* Banner */}
-                            <div style={bannerWrapStyle}>
-                                {!imageLoaded && (
-                                    <Blurhash hash="LEG8_%els7NgM{M{RiNI*0IVog%L" width="100%" height={340} resolutionX={32} resolutionY={32} punch={1} style={{ borderRadius: "12px" }} />
-                                )}
-                                <img
-                                    src={info.eventImg}
-                                    style={{ ...bannerImgStyle, display: imageLoaded ? "block" : "none" }}
-                                    alt={info.eventTitle}
-                                    onLoad={() => setImageLoaded(true)}
-                                />
-                                <div style={dateBadgeStyle}>{formattedDate}</div>
-                                {info.ongoingEvent && (
-                                    <div style={shareBtnStyle} onClick={() => setShareOpen(p => !p)}>
-                                        <img src={shareOutline} alt="Share" style={{ width: "18px", height: "18px" }} />
-                                    </div>
-                                )}
-                            </div>
+                    {isLoading ? (
+                        <ComponentLoading customStyles={{ width: "100%", height: "60vh", display: "flex", justifyContent: "center", alignItems: "center" }} />
+                    ) : !data ? (
+                        <div style={{ color: "white", textAlign: "center", marginTop: "4rem", fontSize: "1.2rem" }}>Event not found.</div>
+                    ) : (
+                        <div style={containerStyle}>
+                            {/* LEFT COLUMN */}
+                            <div style={leftColStyle}>
+                                {/* Banner */}
+                                <div style={bannerWrapStyle}>
+                                    {!imageLoaded && (
+                                        <Blurhash hash="LEG8_%els7NgM{M{RiNI*0IVog%L" width="100%" height="100%" resolutionX={32} resolutionY={32} punch={1} style={{ borderRadius: "16px", position: "absolute", top: 0, left: 0 }} />
+                                    )}
+                                    <img
+                                        src={info.eventImg}
+                                        style={{ ...bannerImgStyle, opacity: imageLoaded ? 1 : 0 }}
+                                        alt={info.eventTitle}
+                                        onLoad={() => setImageLoaded(true)}
+                                    />
+                                    <div style={bannerOverlayStyle}></div>
+                                    <div style={dateBadgeStyle}>{formattedDate}</div>
+                                    {info.ongoingEvent && (
+                                        <div style={shareBtnStyle} onClick={() => setShareOpen(p => !p)}>
+                                            <img src={shareOutline} alt="Share" style={{ width: "20px", height: "20px" }} />
+                                        </div>
+                                    )}
+                                </div>
 
-                            {/* Event Title Row */}
-                            <div style={titleRowStyle}>
-                                <div>
+                                {/* Event Title Row */}
+                                <div style={titleContainerStyle}>
                                     <h1 style={titleStyle}>{info.eventTitle}</h1>
                                     <div style={metaRowStyle}>
                                         {info.participationType === "Team" ? (
-                                            <span style={metaChipStyle}><MdGroups color="#f97507" size={18} /> Team: {info.minTeamSize}–{info.maxTeamSize}</span>
+                                            <span style={metaChipStyle}><MdGroups color="#f97507" size={20} /> Team: {info.minTeamSize}-{info.maxTeamSize}</span>
                                         ) : (
-                                            <span style={metaChipStyle}><FaUser color="#f97507" size={13} /> Individual</span>
+                                            <span style={metaChipStyle}><FaUser color="#f97507" size={14} /> Individual</span>
                                         )}
                                         <span style={metaChipStyle}>
-                                            {info.eventAmount ? <><FaRupeeSign color="#f97507" size={13} />{info.eventAmount}</> : <span style={{ color: "#f97507" }}>Free</span>}
+                                            {info.eventAmount ? <><FaRupeeSign color="#f97507" size={14} />{info.eventAmount}</> : <span style={{ color: "#f97507", fontWeight: "600" }}>Free Event</span>}
                                         </span>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* About Section */}
-                            <div style={sectionStyle}>
-                                <div style={sectionHeaderStyle}>
-                                    <span style={sectionIconStyle}>ℹ</span>
-                                    <h2 style={sectionTitleStyle}>About the Event</h2>
-                                </div>
-                                <div style={dividerStyle} />
-                                <p style={descStyle}>
-                                    {info.eventdescription
-                                        ? info.eventdescription.split("\n").map((line, i) => <React.Fragment key={i}>{line}<br /></React.Fragment>)
-                                        : "Detailed description for this event will be updated shortly."}
-                                </p>
-                            </div>
-
-                            {/* Schedule Section — only if schedule data exists */}
-                            {schedule.length > 0 && (
+                                {/* About Section */}
                                 <div style={sectionStyle}>
                                     <div style={sectionHeaderStyle}>
-                                        <span style={sectionIconStyle}>📅</span>
-                                        <h2 style={sectionTitleStyle}>Schedule &amp; Agenda</h2>
+                                        <h2 style={sectionTitleStyle}>About the Event</h2>
                                     </div>
                                     <div style={dividerStyle} />
-                                    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                                        {schedule.map((item, i) => (
-                                            <div key={i} style={scheduleItemStyle}>
-                                                <span style={scheduleTimeStyle}>{item.time}</span>
-                                                <span style={{ color: "#e0e0e0", fontSize: "0.95rem" }}>{item.title || item.event}</span>
-                                            </div>
-                                        ))}
-                                    </div>
+                                    <p style={descStyle}>
+                                        {info.eventdescription
+                                            ? info.eventdescription.split("\n").map((line, i) => <React.Fragment key={i}>{line}<br /></React.Fragment>)
+                                            : "Detailed description for this event will be updated shortly."}
+                                    </p>
                                 </div>
-                            )}
 
-                            {/* Location Section — only if location exists */}
-                            {info.eventLocation && (
-                                <div style={sectionStyle}>
-                                    <div style={sectionHeaderStyle}>
-                                        <span style={sectionIconStyle}>📍</span>
-                                        <h2 style={sectionTitleStyle}>Location</h2>
-                                    </div>
-                                    <div style={dividerStyle} />
-                                    <div style={locationStyle}>
-                                        <MdLocationOn color="#f97507" size={20} />
-                                        <span style={{ color: "#e0e0e0", fontSize: "0.95rem" }}>{info.eventLocation}</span>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Event Date & Time — only if exists */}
-                            {info.eventTime && (
-                                <div style={sectionStyle}>
-                                    <div style={sectionHeaderStyle}>
-                                        <span style={sectionIconStyle}>🕐</span>
-                                        <h2 style={sectionTitleStyle}>Date &amp; Time</h2>
-                                    </div>
-                                    <div style={dividerStyle} />
-                                    <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
-                                        <div style={locationStyle}>
-                                            <MdCalendarToday color="#f97507" size={16} />
-                                            <span style={{ color: "#e0e0e0", fontSize: "0.95rem" }}>{formattedDate}</span>
+                                {/* Schedule Section */}
+                                {schedule.length > 0 && (
+                                    <div style={sectionStyle}>
+                                        <div style={sectionHeaderStyle}>
+                                            <h2 style={sectionTitleStyle}>Schedule &amp; Agenda</h2>
                                         </div>
-                                        <div style={locationStyle}>
-                                            <MdAccessTime color="#f97507" size={16} />
-                                            <span style={{ color: "#e0e0e0", fontSize: "0.95rem" }}>{info.eventTime}</span>
+                                        <div style={dividerStyle} />
+                                        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                                            {schedule.map((item, i) => (
+                                                <div key={i} style={scheduleItemStyle}>
+                                                    <span style={scheduleTimeStyle}>{item.time}</span>
+                                                    <div style={scheduleItemDividerStyle}></div>
+                                                    <span style={{ color: "#e8e8e8", fontSize: "1rem" }}>{item.title || item.event}</span>
+                                                </div>
+                                            ))}
                                         </div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* RIGHT COLUMN — Registration Panel */}
-                        <div style={rightColStyle}>
-                            <div style={regPanelStyle}>
-                                <h3 style={regPanelTitleStyle}>Registration</h3>
-                                <p style={regPanelSubStyle}>
-                                    {btnTxt === "Already Registered"
-                                        ? "You've already registered for this event!"
-                                        : btnTxt === "Closed"
-                                            ? "Registration for this event is now closed."
-                                            : btnTxt === "Locked"
-                                                ? "Complete prerequisites to unlock registration."
-                                                : remainingTime
-                                                    ? `Registration opens in ${remainingTime}`
-                                                    : "Don't miss out on this event. Secure your spot now!"}
-                                </p>
-
-                                {/* Date info in panel */}
-                                <div style={regInfoRowStyle}>
-                                    <MdCalendarToday color="#f97507" size={16} />
-                                    <span style={{ color: "#aaa", fontSize: "0.875rem" }}>{formattedDate}</span>
-                                </div>
-                                {info.eventTime && (
-                                    <div style={regInfoRowStyle}>
-                                        <MdAccessTime color="#f97507" size={16} />
-                                        <span style={{ color: "#aaa", fontSize: "0.875rem" }}>{info.eventTime}</span>
                                     </div>
                                 )}
+
+                                {/* Location Section */}
                                 {info.eventLocation && (
-                                    <div style={regInfoRowStyle}>
-                                        <MdLocationOn color="#f97507" size={16} />
-                                        <span style={{ color: "#aaa", fontSize: "0.875rem" }}>{info.eventLocation}</span>
+                                    <div style={sectionStyle}>
+                                        <div style={sectionHeaderStyle}>
+                                            <h2 style={sectionTitleStyle}>Location</h2>
+                                        </div>
+                                        <div style={dividerStyle} />
+                                        <div style={locationStyle}>
+                                            <div style={iconCircleStyle}><MdLocationOn color="#f97507" size={24} /></div>
+                                            <span style={{ color: "#cfcfcf", fontSize: "1.05rem", lineHeight: "1.5" }}>{info.eventLocation}</span>
+                                        </div>
                                     </div>
                                 )}
 
-                                <div style={regDividerStyle} />
+                                {/* Date & Time Section */}
+                                {info.eventTime && (
+                                    <div style={sectionStyle}>
+                                        <div style={sectionHeaderStyle}>
+                                            <h2 style={sectionTitleStyle}>Date &amp; Time</h2>
+                                        </div>
+                                        <div style={dividerStyle} />
+                                        <div style={{ display: "flex", gap: "32px", flexWrap: "wrap" }}>
+                                            <div style={locationStyle}>
+                                                <div style={iconCircleStyle}><MdCalendarToday color="#f97507" size={20} /></div>
+                                                <span style={{ color: "#cfcfcf", fontSize: "1.05rem" }}>{formattedDate}</span>
+                                            </div>
+                                            <div style={locationStyle}>
+                                                <div style={iconCircleStyle}><MdAccessTime color="#f97507" size={22} /></div>
+                                                <span style={{ color: "#cfcfcf", fontSize: "1.05rem" }}>{info.eventTime}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
 
-                                <button
-                                    style={{
-                                        ...regBtnStyle,
-                                        opacity: isDisabled ? 0.5 : 1,
-                                        cursor: isDisabled ? "not-allowed" : "pointer",
-                                    }}
-                                    onClick={handleForm}
-                                    disabled={isDisabled}
-                                >
-                                    {btnTxt === "Closed" ? (
-                                        <><span>Closed</span><IoIosLock size={18} /></>
-                                    ) : btnTxt === "Already Registered" ? (
-                                        <span>Already Registered</span>
-                                    ) : btnTxt === "Locked" ? (
-                                        <><span>Locked</span><IoIosLock size={18} /></>
-                                    ) : remainingTime ? (
-                                        <><PiClockCountdownDuotone size={18} /><span>{btnTxt}</span></>
-                                    ) : (
-                                        <span>Register Now</span>
-                                    )}
-                                </button>
+                            {/* RIGHT COLUMN — Registration Panel */}
+                            <div style={rightColStyle}>
+                                <div style={regPanelStyle}>
+                                    <h3 style={regPanelTitleStyle}>Registration</h3>
+                                    <p style={regPanelSubStyle}>
+                                        {btnTxt === "Already Registered"
+                                            ? "You've already registered for this event!"
+                                            : btnTxt === "Closed"
+                                                ? "Registration for this event is now closed."
+                                                : btnTxt === "Locked"
+                                                    ? "Complete prerequisites to unlock registration."
+                                                    : remainingTime
+                                                        ? `Registration opens in ${remainingTime}`
+                                                        : "Don't miss out on this event. Secure your spot now!"}
+                                    </p>
 
-                                {/* Participation type badge */}
-                                <div style={participationBadgeStyle}>
-                                    {info.participationType === "Team" ? (
-                                        <><MdGroups color="#f97507" size={20} /><span>Team Event ({info.minTeamSize}–{info.maxTeamSize} members)</span></>
-                                    ) : (
-                                        <><FaUser color="#f97507" size={14} /><span>Individual Event</span></>
-                                    )}
+                                    <div style={regInfoWrapStyle}>
+                                        <div style={regInfoRowStyle}>
+                                            <MdCalendarToday color="#f97507" size={18} />
+                                            <span style={{ color: "#cfcfcf", fontSize: "0.95rem" }}>{formattedDate}</span>
+                                        </div>
+                                        {info.eventTime && (
+                                            <div style={regInfoRowStyle}>
+                                                <MdAccessTime color="#f97507" size={18} />
+                                                <span style={{ color: "#cfcfcf", fontSize: "0.95rem" }}>{info.eventTime}</span>
+                                            </div>
+                                        )}
+                                        {info.eventLocation && (
+                                            <div style={regInfoRowStyle}>
+                                                <MdLocationOn color="#f97507" size={18} />
+                                                <span style={{ color: "#cfcfcf", fontSize: "0.95rem" }}>{info.eventLocation}</span>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div style={regDividerStyle} />
+
+                                    <button
+                                        style={{
+                                            ...regBtnStyle,
+                                            opacity: isDisabled ? 0.6 : 1,
+                                            cursor: isDisabled ? "not-allowed" : "pointer"
+                                        }}
+                                        onClick={handleForm}
+                                        disabled={isDisabled}
+                                    >
+                                        {btnTxt === "Closed" ? (
+                                            <><span>Closed</span><IoIosLock size={20} /></>
+                                        ) : btnTxt === "Already Registered" ? (
+                                            <span>Already Registered</span>
+                                        ) : btnTxt === "Locked" ? (
+                                            <><span>Locked</span><IoIosLock size={20} /></>
+                                        ) : remainingTime ? (
+                                            <><PiClockCountdownDuotone size={20} /><span>{btnTxt}</span></>
+                                        ) : (
+                                            <span>Register Now</span>
+                                        )}
+                                    </button>
+
+                                    {/* Participation type badge */}
+                                    <div style={participationBadgeStyle}>
+                                        {info.participationType === "Team" ? (
+                                            <><MdGroups color="#f97507" size={22} /><span>Team Event ({info.minTeamSize}-{info.maxTeamSize} members)</span></>
+                                        ) : (
+                                            <><FaUser color="#f97507" size={16} /><span>Individual Event</span></>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
 
-                {isShareOpen && <Share onClose={() => setShareOpen(p => !p)} urlpath={url} />}
-                <Alert />
+                    {isShareOpen && <Share onClose={() => setShareOpen(p => !p)} urlpath={url} />}
+                    <Alert />
+                </div>
             </div>
         </>
     );
@@ -351,102 +347,130 @@ const EventDetailPage = () => {
 
 const pageStyle = {
     minHeight: "100vh",
-    backgroundColor: "#0f0f0f",
-    padding: "24px 20px 60px",
-    fontFamily: "'Segoe UI', sans-serif",
+    backgroundColor: "#0c0c0c",
+    padding: "clamp(20px, 3vw, 40px) 5%",
+    fontFamily: "'Segoe UI', Roboto, Helvetica, sans-serif",
+    color: "#e8e8e8",
+};
+
+const innerPageWrapperStyle = {
+    maxWidth: "1440px",
+    margin: "0 auto",
+    width: "100%",
 };
 
 const backBtnStyle = {
-    display: "flex",
+    display: "inline-flex",
     alignItems: "center",
-    gap: "4px",
-    background: "transparent",
-    border: "1px solid #333",
-    color: "#aaa",
-    padding: "8px 16px",
-    borderRadius: "8px",
+    gap: "8px",
+    background: "#161616",
+    border: "1px solid #2a2a2a",
+    color: "#c9c9c9",
+    padding: "10px 20px",
+    borderRadius: "12px",
     cursor: "pointer",
-    fontSize: "0.875rem",
-    marginBottom: "24px",
-    transition: "border-color 0.2s",
+    fontSize: "0.95rem",
+    fontWeight: "500",
+    marginBottom: "clamp(20px, 4vw, 32px)",
+    transition: "all 0.2s ease",
 };
 
 const containerStyle = {
     display: "flex",
-    gap: "32px",
-    maxWidth: "1100px",
-    margin: "0 auto",
+    gap: "clamp(24px, 4vw, 40px)",
+    width: "100%",
     alignItems: "flex-start",
     flexWrap: "wrap",
 };
 
 const leftColStyle = {
-    flex: "1 1 580px",
+    flex: "1 1 60%",
+    minWidth: "280px", // Allows mobile screens to shrink naturally while wrapping
     display: "flex",
     flexDirection: "column",
-    gap: "24px",
+    gap: "clamp(24px, 4vw, 32px)",
 };
 
 const rightColStyle = {
-    flex: "0 0 300px",
+    flex: "1 1 320px", 
     position: "sticky",
-    top: "24px",
+    top: "32px",
 };
 
 const bannerWrapStyle = {
     position: "relative",
-    borderRadius: "12px",
+    borderRadius: "20px",
     overflow: "hidden",
     background: "#1a1a1a",
+    width: "100%",
+    height: "clamp(250px, 40vw, 450px)", // Fluid height based on screen size
+    border: "1px solid #2a2a2a",
 };
 
 const bannerImgStyle = {
     width: "100%",
-    height: "340px",
+    height: "100%",
     objectFit: "cover",
     display: "block",
-    borderRadius: "12px",
+    transition: "opacity 0.4s ease-in-out",
+};
+
+const bannerOverlayStyle = {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: "40%",
+    background: "linear-gradient(to top, rgba(12,12,12,0.9) 0%, transparent 100%)",
+    pointerEvents: "none",
 };
 
 const dateBadgeStyle = {
     position: "absolute",
     top: "16px",
     left: "16px",
-    background: "rgba(0,0,0,0.75)",
-    color: "white",
-    padding: "6px 14px",
-    borderRadius: "20px",
-    fontSize: "0.8rem",
-    backdropFilter: "blur(6px)",
-    border: "1px solid rgba(255,255,255,0.1)",
+    background: "rgba(10, 10, 10, 0.85)",
+    backdropFilter: "blur(10px)",
+    color: "#fff",
+    padding: "8px 16px",
+    borderRadius: "24px",
+    fontSize: "clamp(0.8rem, 2vw, 0.9rem)",
+    fontWeight: "600",
+    border: "1px solid rgba(255,255,255,0.15)",
+    zIndex: 2,
 };
 
 const shareBtnStyle = {
     position: "absolute",
     top: "16px",
     right: "16px",
-    background: "rgba(0,0,0,0.6)",
-    padding: "8px",
+    background: "rgba(10, 10, 10, 0.85)",
+    backdropFilter: "blur(10px)",
+    padding: "10px",
     borderRadius: "50%",
     cursor: "pointer",
-    backdropFilter: "blur(6px)",
-    border: "1px solid rgba(255,255,255,0.1)",
+    border: "1px solid rgba(255,255,255,0.15)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    zIndex: 2,
+    transition: "background 0.2s ease",
 };
 
-const titleRowStyle = {
+const titleContainerStyle = {
     display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
+    flexDirection: "column",
+    gap: "16px",
+    padding: "0 8px",
 };
 
 const titleStyle = {
-    color: "#f97507",
-    fontSize: "1.6rem",
-    fontWeight: "700",
-    margin: "0 0 8px",
+    color: "#ffffff",
+    fontSize: "clamp(1.75rem, 5vw, 2.5rem)", // Fluid typography
+    fontWeight: "800",
+    lineHeight: "1.2",
+    margin: 0,
+    letterSpacing: "-0.5px",
 };
 
 const metaRowStyle = {
@@ -458,51 +482,48 @@ const metaRowStyle = {
 const metaChipStyle = {
     display: "flex",
     alignItems: "center",
-    gap: "5px",
-    color: "white",
-    fontSize: "0.875rem",
-    background: "#1e1e1e",
-    padding: "4px 12px",
-    borderRadius: "20px",
-    border: "1px solid #333",
+    gap: "8px",
+    background: "#161616",
+    border: "1px solid #2a2a2a",
+    color: "#e8e8e8",
+    fontSize: "clamp(0.85rem, 2vw, 0.95rem)",
+    fontWeight: "500",
+    padding: "8px 16px",
+    borderRadius: "24px",
 };
 
 const sectionStyle = {
-    background: "#161616",
-    borderRadius: "12px",
-    padding: "20px 24px",
-    border: "1px solid #222",
+    background: "#121212",
+    border: "1px solid #2a2a2a",
+    borderRadius: "20px",
+    padding: "clamp(20px, 4vw, 32px)", // Fluid padding
 };
 
 const sectionHeaderStyle = {
     display: "flex",
     alignItems: "center",
-    gap: "10px",
-    marginBottom: "12px",
-};
-
-const sectionIconStyle = {
-    fontSize: "1.2rem",
+    marginBottom: "16px",
 };
 
 const sectionTitleStyle = {
-    color: "white",
-    fontSize: "1.15rem",
-    fontWeight: "600",
+    color: "#ffffff",
+    fontSize: "clamp(1.2rem, 3vw, 1.4rem)",
+    fontWeight: "700",
     margin: 0,
 };
 
 const dividerStyle = {
     height: "2px",
-    background: "linear-gradient(90deg, #f97507 0%, transparent 100%)",
-    marginBottom: "16px",
+    background: "linear-gradient(90deg, #f97507 0%, rgba(249, 117, 7, 0.1) 50%, transparent 100%)",
+    marginBottom: "24px",
     borderRadius: "2px",
+    width: "60%",
 };
 
 const descStyle = {
-    color: "#c0c0c0",
-    fontSize: "0.95rem",
-    lineHeight: "1.7",
+    color: "#cfcfcf",
+    fontSize: "1.05rem",
+    lineHeight: "1.8",
     margin: 0,
 };
 
@@ -510,91 +531,121 @@ const scheduleItemStyle = {
     display: "flex",
     alignItems: "center",
     gap: "16px",
-    background: "#1e1e1e",
-    borderRadius: "8px",
-    padding: "12px 16px",
+    borderRadius: "12px",
+    padding: "16px 20px",
+    background: "#181818",
     border: "1px solid #2a2a2a",
+    flexWrap: "wrap", // Helps text not overflow on very small screens
 };
 
 const scheduleTimeStyle = {
     color: "#f97507",
-    fontWeight: "600",
-    fontSize: "0.875rem",
-    minWidth: "80px",
+    fontWeight: "700",
+    fontSize: "0.95rem",
+    minWidth: "90px",
+};
+
+const scheduleItemDividerStyle = {
+    width: "1px",
+    height: "24px",
+    background: "#333",
+    display: "block",
 };
 
 const locationStyle = {
     display: "flex",
     alignItems: "center",
-    gap: "8px",
+    gap: "16px",
+};
+
+const iconCircleStyle = {
+    background: "#1c140d",
+    border: "1px solid rgba(249, 117, 7, 0.2)",
+    padding: "10px",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    minWidth: "44px",
 };
 
 // Registration Panel
 const regPanelStyle = {
-    background: "#161616",
-    borderRadius: "12px",
-    padding: "24px",
+    background: "#121212",
+    borderRadius: "20px",
+    padding: "clamp(20px, 4vw, 32px)",
     border: "1px solid #2a2a2a",
     display: "flex",
     flexDirection: "column",
-    gap: "12px",
+    gap: "20px",
 };
 
 const regPanelTitleStyle = {
-    color: "white",
-    fontSize: "1.3rem",
-    fontWeight: "700",
+    color: "#ffffff",
+    fontSize: "1.6rem",
+    fontWeight: "800",
     margin: 0,
 };
 
 const regPanelSubStyle = {
-    color: "#888",
-    fontSize: "0.875rem",
-    lineHeight: "1.5",
+    color: "#a0a0a0",
+    fontSize: "0.95rem",
+    lineHeight: "1.6",
     margin: 0,
+};
+
+const regInfoWrapStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+    background: "#181818",
+    padding: "16px",
+    borderRadius: "12px",
+    border: "1px solid #2a2a2a",
 };
 
 const regInfoRowStyle = {
     display: "flex",
     alignItems: "center",
-    gap: "8px",
+    gap: "12px",
 };
 
 const regDividerStyle = {
     height: "1px",
     background: "#2a2a2a",
-    margin: "4px 0",
+    margin: "8px 0",
 };
 
 const regBtnStyle = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: "8px",
+    gap: "10px",
     width: "100%",
-    padding: "14px",
-    background: "linear-gradient(135deg, #f97507, #e06000)",
+    padding: "16px",
+    background: "linear-gradient(135deg, #f97507 0%, #d86200 100%)",
     color: "white",
     border: "none",
-    borderRadius: "10px",
-    fontSize: "1rem",
-    fontWeight: "600",
-    transition: "transform 0.15s, box-shadow 0.15s",
-    boxShadow: "0 4px 20px rgba(249,117,7,0.3)",
+    borderRadius: "12px",
+    fontSize: "1.1rem",
+    fontWeight: "700",
+    transition: "all 0.3s ease",
+    boxShadow: "none", // Removed glow animation shadow here
 };
 
 const participationBadgeStyle = {
     display: "flex",
     alignItems: "center",
-    gap: "8px",
-    color: "#888",
-    fontSize: "0.8rem",
-    padding: "10px",
-    background: "#1a1a1a",
-    borderRadius: "8px",
-    border: "1px solid #2a2a2a",
+    justifyContent: "center",
+    gap: "10px",
+    color: "#a0a0a0",
+    fontSize: "0.9rem",
+    fontWeight: "500",
+    padding: "14px",
+    background: "#161616",
+    borderRadius: "12px",
+    border: "1px dashed #333",
+    marginTop: "8px",
 };
 
 export default EventDetailPage;
-
-

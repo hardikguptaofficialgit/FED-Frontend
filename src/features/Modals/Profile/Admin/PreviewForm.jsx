@@ -3,7 +3,7 @@ import styles from "./styles/Preview.module.scss";
 import AuthContext from "../../../../context/AuthContext";
 import { Button, Text } from "../../../../components";
 import Section from "./SectionModal";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import { getOutboundList } from "../../../../sections/Profile/Admin/Form/NewForm/NewForm";
 import Complete from "../../../../assets/images/Complete.svg";
@@ -32,6 +32,7 @@ const PreviewForm = ({
   form,
   sections = [],
   open,
+  inline = false,
   meta = [],
   handleClose,
   showCloseBtn,
@@ -67,7 +68,7 @@ const PreviewForm = ({
   }, []);
 
   useEffect(() => {
-    if (open) {
+    if (open && !inline) {
       document.body.classList.add(styles.noScroll);
     } else {
       document.body.classList.remove(styles.noScroll);
@@ -76,7 +77,7 @@ const PreviewForm = ({
     return () => {
       document.body.classList.remove(styles.noScroll);
     };
-  }, [open]);
+  }, [open, inline]);
 
   useEffect(() => {
     constructSections();
@@ -586,33 +587,43 @@ const PreviewForm = ({
 
   return (
     <>
-      open && (
-      <div className={styles.mainPreview}>
-        <div className={styles.previewContainerWrapper}>
-          <div ref={wrapperRef} className={styles.previewContainer}>
-            {showCloseBtn &&
-              (isEditing ? (
-                <div onClick={handleClose} className={styles.closeBtn}>
-                  <X />
-                </div>
-              ) : (
-                <Link to="/Events" onClick={handleClose}>
-                  <div className={styles.closeBtn}>
-                    <X />
-                  </div>
-                </Link>
-              ))}
-            <Text
-              style={{
-                marginBottom: "20px",
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                fontSize: "25px",
-              }}
-            >
-              {eventData?.eventTitle || "Preview Event"}
-            </Text>
+      {open && (
+      <div
+        className={`${inline ? styles.pagePreview : styles.mainPreview} ${
+          inline ? "" : "fed-modal-root"
+        }`}
+      >
+        {!inline && <div className="fed-modal-overlay" onClick={handleClose}></div>}
+        <div
+          className={`${inline ? styles.pagePreviewWrapper : styles.previewContainerWrapper} ${
+            inline ? "" : "fed-modal-surface"
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div
+            ref={wrapperRef}
+            className={`${styles.previewContainer} ${
+              inline ? styles.inlineContainer : ""
+            }`}
+          >
+            {showCloseBtn && (
+              <button
+                type="button"
+                onClick={handleClose}
+                className={styles.closeBtn}
+                aria-label="Close"
+              >
+                <X />
+              </button>
+            )}
+            <div className={styles.formHeader}>
+              <div className={styles.formTitle}>
+                {eventData?.eventTitle || "Preview Event"}
+              </div>
+              <div className={styles.formSubtitle}>
+                Complete the registration form to secure your spot.
+              </div>
+            </div>
             {isLoading ? (
               <ComponentLoading
                 customStyles={{
@@ -625,33 +636,17 @@ const PreviewForm = ({
               />
             ) : !isCompleted.includes("Submitted") ? (
               <div style={{ width: "100%" }}>
-                <div>
-                  <Text style={{ alignSelf: "center" }} variant="secondary">
-                    {currentSection.name}
-                  </Text>
-                  <Text
-                    style={{
-                      cursor: "pointer",
-                      padding: "6px 0",
-                      fontSize: "11px",
-                      opacity: "0.4",
-                      marginBottom: "8px",
-                    }}
-                  >
+                <div className={styles.sectionHeader}>
+                  <div className={styles.sectionTitle}>{currentSection.name}</div>
+                  <div className={styles.sectionDesc}>
                     {currentSection.description}
-                  </Text>
+                  </div>
                 </div>
                 {renderPaymentScreen()}
                 <Section section={currentSection} handleChange={handleChange} />
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                  }}
-                >
+                <div className={styles.formActions}>
                   {inboundList() && inboundList().backSection && (
-                    <Button style={{ marginRight: "10px" }} onClick={onBack}>
+                    <Button onClick={onBack}>
                       Back
                     </Button>
                   )}
@@ -732,7 +727,7 @@ const PreviewForm = ({
           </div>
         </div>
       </div>
-      )
+      )}
       <Alert />
     </>
   );

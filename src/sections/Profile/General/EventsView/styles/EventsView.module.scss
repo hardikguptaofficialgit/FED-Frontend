@@ -3,8 +3,9 @@
   font-family: "Poppins", sans-serif;
   display: flex;
   flex-direction: column;
-  padding: 30px 0 26px;
-  gap: 18px;
+  padding: 34px 0 28px;
+  gap: 24px;
+  box-sizing: border-box;
 }
 
 .error {
@@ -14,6 +15,8 @@
   background: rgba(127, 29, 29, 0.2);
   border-radius: 10px;
   font-size: 0.95rem;
+  width: min(1100px, calc(100% - 2rem));
+  margin: 0 auto;
 }
 
 .proHeading {
@@ -29,58 +32,80 @@
   margin: 0;
   font-size: clamp(1.6rem, 2.2vw, 2rem);
   letter-spacing: 0.02em;
+  color: #f8fafc;
+  font-weight: 600;
 }
 
 .headInnerText span {
   margin-right: 4px;
   background: linear-gradient(to right, #d03e21 40%, #ff8a00);
   -webkit-background-clip: text;
+  background-clip: text;
   color: transparent;
 }
 
 .countBadge {
-  padding: 7px 12px;
+  padding: 6px 14px;
   border-radius: 999px;
   font-size: 0.78rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  border: 1px solid rgba(251, 146, 60, 0.45);
-  background: rgba(194, 65, 12, 0.2);
-  color: #fed7aa;
+  font-weight: 600;
+  border: 1px solid rgba(251, 146, 60, 0.55);
+  background: rgba(251, 146, 60, 0.12);
+  color: #ffe0c2;
   white-space: nowrap;
 }
 
 .tableCard {
   width: min(1100px, calc(100% - 2rem));
   margin: 0 auto;
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  border-radius: 14px;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(2, 6, 23, 0.92));
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(17, 17, 20, 0.96), rgba(10, 10, 12, 0.96));
   position: relative;
   overflow: hidden;
+  box-shadow: 0 8px 32px rgba(10, 10, 12, 0.5);
 }
 
 .timelineLine {
   position: absolute;
-  left: 27px;
+  left: 20px;
   top: 54px;
-  bottom: 14px;
+  bottom: 20px;
   width: 2px;
-  background: linear-gradient(180deg, rgba(251, 146, 60, 0.5), rgba(59, 130, 246, 0.15));
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(251, 146, 60, 0.45), rgba(148, 163, 184, 0.08));
   pointer-events: none;
+  z-index: 3;
 }
 
 .tables {
   width: 100%;
   overflow-x: auto;
-  padding-left: 12px;
+  padding-left: 36px; 
+  padding-right: 12px;
+  box-sizing: border-box;
+}
+
+.tables::-webkit-scrollbar {
+  height: 8px;
+}
+
+.tables::-webkit-scrollbar-track {
+  background: rgba(148, 163, 184, 0.05);
+  border-radius: 0 0 16px 16px;
+}
+
+.tables::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.18);
+  border-radius: 8px;
 }
 
 .eventsTable {
   width: 100%;
   min-width: 720px;
-  border-collapse: separate;
-  border-spacing: 0;
+  border-collapse: collapse;
 }
 
 .eventsTable thead th {
@@ -88,23 +113,31 @@
   font-size: 0.8rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #94a3b8;
+  color: #a7b0bf;
   font-weight: 600;
-  padding: 16px 14px;
+  padding: 18px 14px;
   position: sticky;
   top: 0;
-  background: rgba(15, 23, 42, 0.96);
+  background: rgba(12, 12, 14, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 2;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
 }
 
 .eventsTable tbody td {
-  padding: 14px;
-  border-top: 1px solid rgba(148, 163, 184, 0.15);
+  padding: 16px 14px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.06);
   font-size: 0.92rem;
+  vertical-align: middle;
 }
 
-.row:hover {
-  background: rgba(30, 41, 59, 0.42);
+.eventsTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.eventsTable tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.015);
 }
 
 .eventNameCell {
@@ -118,31 +151,21 @@
   color: #cbd5e1;
 }
 
-.rowDot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #fb923c;
-  box-shadow: 0 0 0 4px rgba(251, 146, 60, 0.2);
-  flex-shrink: 0;
-}
-
 .viewButton {
-  border: 1px solid rgba(251, 146, 60, 0.45);
-  background: rgba(251, 146, 60, 0.14);
-  color: #fdba74;
+  border: 1px solid rgba(251, 146, 60, 0.5);
+  background: rgba(251, 146, 60, 0.18);
+  color: #ffe0c2;
   border-radius: 8px;
-  padding: 6px 12px;
+  padding: 8px 16px;
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s ease;
   white-space: nowrap;
 }
 
-.viewButton:hover:not(:disabled) {
-  background: rgba(251, 146, 60, 0.24);
-  border-color: rgba(251, 146, 60, 0.75);
+.viewButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(10, 10, 12, 0.96), 0 0 0 4px rgba(251, 146, 60, 0.8);
 }
 
 .viewButton:disabled {
@@ -151,38 +174,42 @@
 }
 
 .loadingContainer {
-  min-height: 26px;
+  min-height: 80px;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .noEvents {
   text-align: center;
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 500;
   color: #94a3b8;
-  padding: 48px 20px;
+  padding: 60px 20px;
 }
 
 @media screen and (max-width: 768px) {
   .participatedEvents {
     padding-top: 20px;
+    gap: 16px;
   }
 
   .proHeading {
-    width: calc(100% - 1rem);
+    width: calc(100% - 1.5rem);
     flex-wrap: wrap;
   }
 
   .tableCard {
-    width: calc(100% - 1rem);
+    width: calc(100% - 1.5rem);
+    border-radius: 12px;
   }
 
   .timelineLine {
-    left: 22px;
+    left: 12px;
   }
 
   .tables {
-    padding-left: 6px;
+    padding-left: 24px;
+    padding-right: 8px;
   }
 }

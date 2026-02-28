@@ -53,29 +53,26 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 2000;
 }
 
 .scannerContent {
-  background: #1a1a1a;
   padding: 2rem;
-  border-radius: 10px;
   width: 90%;
-  max-width: 500px;
+  max-width: 520px;
   position: relative;
 
   .closeButton {
     position: absolute;
-    top: 4px;
-    right: 6px;
-    border: none;
-    border-radius: 50%;
-    width: 34px;
-    height: 34px;
+    top: 10px;
+    right: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;

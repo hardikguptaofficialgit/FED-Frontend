@@ -116,11 +116,22 @@
   background-clip: text;
 }
 
-.eventname p {
+.eventMeta {
   font-size: 0.9rem;
   display: flex;
   align-items: center;
   margin-top: 0.1rem;
+  color: #fff;
+}
+
+.price {
+  display: flex;
+  align-items: center;
+}
+
+.priceValue {
+  display: flex;
+  align-items: center;
   color: #fff;
 }
 
@@ -314,7 +325,7 @@ input:checked + .slider:before {
   .eventname {
     font-size: 0.95rem;
   }
-  .eventname p{
+  .eventMeta{
     font-size: 0.7rem;
   }
 

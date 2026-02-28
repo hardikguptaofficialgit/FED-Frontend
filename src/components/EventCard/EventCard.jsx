@@ -25,7 +25,7 @@ import { TeamDetailsModal } from "../../features/Modals";
 const EventCard = (props) => {
   const {
     data,
-    onOpen,
+    onOpen = () => {},
     type,
     modalpath,
     customStyles = {},
@@ -219,7 +219,7 @@ const EventCard = (props) => {
             } else if (data?.info?.isRegistrationClosed) {
               setBtnTxt("Closed");
             } else {
-              setBtnTxt("Registe Now");
+              setBtnTxt("Register Now");
             }
           }
         }
@@ -332,19 +332,10 @@ const EventCard = (props) => {
           duration: 3000,
         });
       } else {
-        // setNavigatePath("/Events/" + data.id + "/Form");
-        // setTimeout(() => {
-        //   setShouldNavigate(true);
-        // }, 1000);
-
         setTimeout(() => {
-          window.open("/Events/" + data.id, "_blank", "noopener,noreferrer");
+          navigate(`/Events/${data.id}/details`);
           setIsMicroLoading(false);
-        }, 1000);
-
-        // setTimeout(() => {
-        //   setIsMicroLoading(false);
-        // }, 3000);
+        }, 300);
       }
     } else {
       setIsMicroLoading(true);
@@ -408,7 +399,10 @@ const EventCard = (props) => {
             <div
               className={style.share}
               style={customStyles.share}
-              onClick={handleShare}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleShare();
+              }}
             >
               <img
                 className={style.shareIcon}
@@ -422,7 +416,10 @@ const EventCard = (props) => {
             <div
               className={style.qrCode}
               style={customStyles.qrCode}
-              onClick={handleQRCode}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleQRCode();
+              }}
               title="View Attendance QR Code"
             >
               <QrCode
@@ -443,7 +440,7 @@ const EventCard = (props) => {
             </span>
 
             {type === "ongoing" && (
-              <p>
+              <div className={style.eventMeta}>
                 {info.participationType === "Team" ? (
                   <>
                     <MdGroups color="#f97507" size={25} />
@@ -475,17 +472,22 @@ const EventCard = (props) => {
                   </>
                 )}
 
-                <div className={style.price} style={customStyles.price}>
+                <span className={style.price} style={customStyles.price}>
                   {info.eventAmount ? (
-                    <p style={{ font: "2rem" }}>
+                    <span className={style.priceValue} style={{ font: "2rem" }}>
                       <FaRupeeSign color="#f97507" size={15} />
                       {info.eventAmount}
-                    </p>
+                    </span>
                   ) : (
-                    <p style={{ color: "white", marginTop: "-1px" }}>Free</p>
+                    <span
+                      className={style.priceValue}
+                      style={{ color: "white", marginTop: "-1px" }}
+                    >
+                      Free
+                    </span>
                   )}
-                </div>
-              </p>
+                </span>
+              </div>
             )}
           </div>
           {type === "ongoing" && showRegisterButton && (
@@ -662,7 +664,7 @@ const EventCard = (props) => {
 
 EventCard.propTypes = {
   data: PropTypes.object.isRequired,
-  onOpen: PropTypes.func.isRequired,
+  onOpen: PropTypes.func,
   type: PropTypes.string.isRequired,
   modalpath: PropTypes.string.isRequired,
   customStyles: PropTypes.object,

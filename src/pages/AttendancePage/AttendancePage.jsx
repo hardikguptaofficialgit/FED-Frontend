@@ -336,8 +336,9 @@ const AttendancePage = () => {
 
       {/* Success Modal */}
       {showSuccessModal && attendedUser && (
-        <div className={styles.scannerModal}>
-          <div className={styles.scannerContent}>
+        <div className={`${styles.scannerModal} fed-modal-root`}>
+          <div className="fed-modal-overlay" onClick={handleCloseSuccessModal}></div>
+          <div className={`${styles.scannerContent} fed-modal-surface`}>
             <button
               className={styles.closeButton}
               onClick={handleCloseSuccessModal}

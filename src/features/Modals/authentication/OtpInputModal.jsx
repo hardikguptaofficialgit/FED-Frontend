@@ -13,41 +13,40 @@ const OtpInputModal = (props) => {
   }, []);
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        width: "100%",
-        height: "100%",
-
-        zIndex: "1200",
-
-        left: "0",
-        top: "0",
-      }}
-    >
+    <div className="fed-modal-root">
       <div
+        className="fed-modal-overlay"
         style={{
-          position: "absolute",
-          top: "0",
-          left: "0",
-          width: "100%",
-          height: "100%",
-          background: "rgba(0, 0, 0, 0.5)",
-          backdropFilter: "blur(4px)",
-          zIndex: "1190",
           display: "flex",
           justifyContent: "center",
+          alignItems: "center",
         }}
+        onClick={handleClose}
       >
         <div
-          style={{
-            width: "auto",
-            height: "27rem",
-            borderRadius: "20px",
-            marginTop: "5rem",
-            position: "relative",
-          }}
+          className="fed-modal-surface"
+          style={{ width: "min(520px, 92vw)", position: "relative" }}
+          onClick={(e) => e.stopPropagation()}
         >
+          <button
+            type="button"
+            onClick={handleClose}
+            style={{
+              position: "absolute",
+              top: "0.6rem",
+              right: "0.6rem",
+              zIndex: 10,
+              background: "transparent",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
+              color: "#fff",
+              borderRadius: "8px",
+              padding: "0.35rem",
+              cursor: "pointer",
+            }}
+            aria-label="Close"
+          >
+            <X />
+          </button>
           <OtpInput
             isSignUp={true}
             onHandleVerfiy={onVerify}

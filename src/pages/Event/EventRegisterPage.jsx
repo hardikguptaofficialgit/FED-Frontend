@@ -57,7 +57,7 @@ const EventRegisterPage = () => {
     }, [eventId]);
 
     const handleClose = () => {
-        navigate(`/Events/${eventId}`);
+        navigate(`/Events/${eventId}/details`);
     };
 
     return (
@@ -82,6 +82,7 @@ const EventRegisterPage = () => {
                 <div className={style.formWrapper}>
                     <PreviewForm
                         open={true}
+                        inline={true}
                         handleClose={handleClose}
                         eventId={eventData?.id}
                         sections={eventData?.sections || []}

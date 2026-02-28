@@ -14,7 +14,7 @@ const Events = () => {
   const [error, setError] = useState(null);
   const [certificates, setCertificates] = useState([]);
   const [certMap, setCertMap] = useState({});
-  const [loadingCerts, setLoadingCerts] = useState(true); // New state for certificate loading
+  const [loadingCerts, setLoadingCerts] = useState(true);
 
   const viewPath = "/profile/Events";
   const analyticsPath = "/profile/events/Analytics";
@@ -39,10 +39,8 @@ const Events = () => {
         if (response.status === 200) {
           let fetchedEvents = response.data.events;
           if (authCtx.user.access !== "USER") {
-            // Set events for non-users
             setEvents(sortEventsByDate(fetchedEvents));
           } else {
-            // Filter and then sort events for users
             const filteredEvents = fetchedEvents.filter((event) =>
               userEvents.includes(event.id)
             );
@@ -61,18 +59,6 @@ const Events = () => {
             "Sorry for the inconvenience, we are having issues fetching your Events",
         });
         console.error("Error fetching team members:", error);
-
-        // const userEvents = authCtx.user.regForm;
-        // // using local JSON data
-        // let localEvents = eventsData.events;
-        // if (authCtx.user.access !== "USER") {
-        //   setEvents(sortEventsByDate(localEvents));
-        // } else {
-        //   const filteredEvents = localEvents.filter((event) =>
-        // userEvents.includes(event._id);
-        //   );
-        //   setEvents(sortEventsByDate(filteredEvents));
-        // }
       } finally {
         setIsLoading(false);
       }
@@ -93,9 +79,8 @@ const Events = () => {
             headers: { Authorization: `Bearer ${authCtx.token}` },
           }
         );
-        // console.log(response);
         if (response.status === 200) {
-          setCertificates(response.data.certandevent); // This will be an array of { cert, event }
+          setCertificates(response.data.certandevent);
         }
       } catch (err) {
         console.error("Error fetching certificates:", err);
@@ -107,9 +92,7 @@ const Events = () => {
 
   const getCertificateForEvent = async (eventId) => {
     const eid = await accessOrCreateEventByFormId(eventId, authCtx.token);
-    // console.log(eid, certificates[0].cert.eventId);
     const found = certificates.find((item) => item.cert.eventId == eid.id);
-    // console.log(found);
     return found ? found.cert : null;
   };
 
@@ -128,7 +111,7 @@ const Events = () => {
 
   useEffect(() => {
     const fetchAllCerts = async () => {
-      setLoadingCerts(true); // Start loading
+      setLoadingCerts(true);
       const map = {};
       if (events.length > 0) {
         for (const event of events) {
@@ -140,13 +123,12 @@ const Events = () => {
         }
       }
       setCertMap(map);
-      setLoadingCerts(false); // End loading
+      setLoadingCerts(false);
     };
 
     if (events.length > 0 && certificates.length > 0) {
       fetchAllCerts();
     } else if (events.length > 0 && !isLoading) {
-      // If events are loaded but no certificates found
       setLoadingCerts(false);
     }
   }, [events, certificates]);

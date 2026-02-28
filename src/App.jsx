@@ -40,6 +40,8 @@ const Home = lazy(() => import("./pages/Home/Home"));
 const Event = lazy(() => import("./pages/Event/Event"));
 const PastEvent = lazy(() => import("./pages/Event/PastEvent"));
 const EventForm = lazy(() => import("./pages/Event/EventForm"));
+const EventDetailPage = lazy(() => import("./pages/Event/EventDetailPage"));
+const EventRegisterPage = lazy(() => import("./pages/Event/EventRegisterPage"));
 const Social = lazy(() => import("./pages/Social/Social"));
 const Team = lazy(() => import("./pages/Team/Team"));
 const Alumni = lazy(() => import("./pages/Alumni/Alumni"));
@@ -161,6 +163,14 @@ function App() {
             <Route
               path="/Events/:eventId/Form"
               element={[<Event />, <EventForm />]}
+            />
+            <Route
+              path="/Events/:eventId/details"
+              element={<EventDetailPage />}
+            />
+            <Route
+              path="/Events/:eventId/Register"
+              element={<EventRegisterPage />}
             />
 
             <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
