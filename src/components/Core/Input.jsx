@@ -2,30 +2,41 @@ import { forwardRef, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import Select, { components } from "react-select";
-import DatePicker from "react-date-picker";
 import { AiOutlineDown } from "react-icons/ai";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import DatePickerWithTime from "react-datepicker";
+import { isValid, parse } from "date-fns";
 import styles from "./styles/Core.module.scss";
 
 const CustomInput = forwardRef(
-  ({ value, onClick, placeholder = "Select Date & Time" }, ref) => (
+  (
+    { value, onClick, placeholder = "Select Date & Time", className, style },
+    ref
+  ) => (
     <div
       onClick={onClick}
       ref={ref}
+      className={className}
       style={{
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
+        position: "relative",
+        paddingRight: "40px",
+        cursor: "pointer",
+        ...style,
       }}
     >
       <p
         style={{
-          margin: "4px",
-          fontSize: "12px !important",
+          margin: "0 8px",
+          fontSize: "0.95rem",
           opacity: value ? 1 : 0.5,
-          fontWeight: "100 !important",
+          fontWeight: 400,
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
         }}
       >
         {value || placeholder}
@@ -35,8 +46,9 @@ const CustomInput = forwardRef(
         size={18}
         style={{
           position: "absolute",
-          top: "20%",
-          right: "8px",
+          top: "50%",
+          right: "12px",
+          transform: "translateY(-50%)",
         }}
       />
     </div>
@@ -52,19 +64,25 @@ CustomInput.propTypes = {
 };
 
 const customStyles = {
-  control: (provided) => ({
+  control: (provided, state) => ({
     ...provided,
-    minHeight: "48px",
+    minHeight: "52px",
     borderRadius: "999px",
     color: "#fff",
     fontSize: "0.95rem",
     background:
       "linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02))",
-    border: "1px solid rgba(255, 255, 255, 0.2)",
-    boxShadow: "none",
+    border: state.isFocused
+      ? "1px solid rgba(255, 165, 90, 0.95)"
+      : "1px solid rgba(255, 255, 255, 0.2)",
+    boxShadow: state.isFocused
+      ? "0 0 0 4px rgba(255, 133, 50, 0.18), 0 10px 28px rgba(0, 0, 0, 0.3)"
+      : "none",
     cursor: "pointer",
     "&:hover": {
-      borderColor: "rgba(255, 255, 255, 0.2)",
+      borderColor: state.isFocused
+        ? "rgba(255, 165, 90, 0.95)"
+        : "rgba(255, 255, 255, 0.2)",
     },
   }),
   valueContainer: (provided) => ({
@@ -74,7 +92,7 @@ const customStyles = {
   menu: (provided) => ({
     ...provided,
     marginTop: "8px",
-    borderRadius: "20px",
+    borderRadius: "16px",
     border: "1px solid rgba(255, 255, 255, 0.18)",
     background:
       "linear-gradient(145deg, rgba(16, 19, 28, 0.98), rgba(12, 16, 24, 0.96))",
@@ -150,6 +168,19 @@ const Input = (props) => {
   const [showPassword, setshowPassword] = useState(false);
   const [previewFile, setpreviewFile] = useState(null);
 
+  const parseDateValue = (input) => {
+    if (!input) return null;
+    if (input instanceof Date) return input;
+
+    if (typeof input === "string") {
+      const parsed = parse(input, "MMMM do yyyy, h:mm:ss a", new Date());
+      if (isValid(parsed)) return parsed;
+    }
+
+    const fallback = new Date(input);
+    return Number.isNaN(fallback.getTime()) ? null : fallback;
+  };
+
   const filterPassedTime = (time) => {
     const currentDate = new Date();
     const selectedDate = new Date(time);
@@ -223,46 +254,50 @@ const Input = (props) => {
       case "date":
         return (
           <div>
-            <DatePicker
+            <DatePickerWithTime
               name={name}
-              className={`${styles.input} ${styles.inputDate} ${className}`}
               ref={dateRef}
-              placeholder={placeholder}
-              value={value}
+              selected={parseDateValue(value)}
               onChange={onChange}
-              clearIcon={null}
-              style={style || {}}
-              calendarIcon={
-                <FaRegCalendarAlt
-                  color="#fff"
-                  size={18}
-                  style={{
-                    position: "absolute",
-                    top: "25%",
-                    right: "12px",
-                  }}
-                />
-              }
+              placeholderText={placeholder}
+              className={`${styles.input} ${styles.inputDate} ${className}`}
+              showPopperArrow={false}
+              popperPlacement="bottom-start"
+              popperClassName="fed-datepicker-popper"
+              calendarClassName="fed-datepicker fed-datepicker-compact"
+              withPortal
+              portalId="fed-datepicker-portal"
               {...rest}
             />
           </div>
         );
       case "datetime-local":
         return (
-          <div className={`${styles.input} ${styles.inputDate} ${className}`}>
+          <div className={`${styles.input} ${styles.inputDate} ${styles.datePickerWrap} ${className}`}>
             <DatePickerWithTime
               name={name}
               ref={dateRef}
-              value={value}
+              selected={parseDateValue(value)}
               onChange={onChange}
               clearIcon={null}
               showTimeSelect
               filterTime={filterPassedTime}
-              timeFormat="HH:mm"
-              timeIntervals={15}
+              minDate={new Date()}
+              timeFormat="hh:mm aa"
+              timeIntervals={1}
               timeCaption="time"
-              dateFormat="MMMM d, yyyy h:mm"
+              dateFormat="MMMM d, yyyy h:mm aa"
               customInput={<CustomInput placeholder={placeholder} />}
+              popperPlacement="bottom-start"
+              popperClassName="fed-datepicker-popper"
+              calendarClassName="fed-datepicker fed-datepicker-datetime"
+              showPopperArrow={false}
+              withPortal
+              portalId="fed-datepicker-portal"
+              popperModifiers={[
+                { name: "offset", options: { offset: [0, 8] } },
+                { name: "preventOverflow", options: { boundary: "viewport", padding: 8 } },
+              ]}
               {...rest}
             />
           </div>

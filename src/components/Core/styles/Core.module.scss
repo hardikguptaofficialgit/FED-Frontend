@@ -1,8 +1,9 @@
+/* ================= Buttons ================= */
+
 .main_Button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  margin-top: 14px;
 
   padding: 12px 22px;
   font-size: 0.95rem;
@@ -25,21 +26,17 @@
   transition: background 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Hover — no scale, no border color change */
 .main_Button:hover:not(:disabled) {
   background: linear-gradient(
     145deg,
     rgba(255, 255, 255, 0.16),
     rgba(255, 255, 255, 0.06)
   );
-  box-shadow:
-    0 8px 22px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
 }
 
-/* Active — subtle press effect, no movement */
 .main_Button:active:not(:disabled) {
-  box-shadow:
-    0 4px 14px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
 }
 
 .main_Button:disabled {
@@ -64,14 +61,17 @@
 .containerInput {
   position: relative;
   width: 100%;
-  margin-top: 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* controls space between label and input */
+  overflow: visible;
 }
 
+/* ================= Input Label ================= */
+
 .inputLabel {
-  display: inline-block;
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 6px;
-  margin-left: 6px;
+  color: rgba(255, 255, 255, 0.85);
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -81,7 +81,7 @@
 
 .input {
   width: 100%;
-  min-height: 48px;
+  min-height: 52px;
   padding: 0 16px;
 
   display: flex;
@@ -99,6 +99,7 @@
   backdrop-filter: blur(12px);
   color: #ffffff;
   font-size: 0.95rem;
+  line-height: 1.2;
 
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -113,6 +114,7 @@
   box-shadow:
     0 0 0 4px rgba(255, 133, 50, 0.18),
     0 10px 28px rgba(0, 0, 0, 0.3);
+  outline: none;
 }
 
 /* ================= Textarea ================= */
@@ -124,16 +126,63 @@
   resize: none;
 }
 
-/* ================= Select & Date ================= */
-
-.selectWrap,
-.dateWrap {
-  margin-bottom: 12px;
-}
+/* ================= Date & Select ================= */
 
 .inputDate {
-  padding-right: 44px !important;
+  padding-right: 44px;
+}
+
+.datePickerWrap {
+  position: relative;
+  z-index: 2;
+}
+
+:global(.react-calendar) {
+  background: transparent;
+  border: none;
+  color: inherit;
+}
+
+:global(.react-calendar__navigation button) {
+  color: #fff;
+}
+
+:global(.react-calendar__month-view__weekdays) {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+:global(.react-calendar__tile) {
+  color: #fff;
+  border-radius: 10px;
+  padding: 0.45em 0.2em;
+}
+
+:global(.react-calendar__tile:enabled:hover),
+:global(.react-calendar__tile:enabled:focus) {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+:global(.react-calendar__tile--active) {
+  background: linear-gradient(140deg, #ff8a3d, #ff5f1f);
+  color: #fff;
+}
+
+.input :global(.react-select__control) {
+  min-height: 52px;
   border-radius: 999px;
+}
+
+.input :global(.react-select__value-container) {
+  padding: 0 16px;
+}
+
+.input :global(.react-select__indicator-separator) {
+  display: none;
+}
+
+.input :global(.react-select__menu) {
+  border-radius: 16px;
+  overflow: hidden;
 }
 
 /* ================= Password Icon ================= */
@@ -160,7 +209,7 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-/* ================= Smooth Glow Animation (Optional) ================= */
+/* ================= Optional Glow Animation ================= */
 
 @keyframes fieldGlow {
   0% {

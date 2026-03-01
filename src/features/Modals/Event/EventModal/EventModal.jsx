@@ -30,6 +30,7 @@ import {
 import { api } from "../../../../services";
 import { parse, differenceInMilliseconds, formatDistanceToNow } from "date-fns";
 import eventDefaultImg from "../../../../assets/images/defaultEventModal.png";
+import { Dialog } from "../../../../components";
 
 const EventModal = (props) => {
   const { onClosePath } = props;
@@ -127,13 +128,6 @@ const EventModal = (props) => {
       return () => clearInterval(intervalId);
     }
   }, [info.regDateAndTime]);
-
-  useEffect(() => {
-    document.body.classList.add("fed-modal-open");
-    return () => {
-      document.body.classList.remove("fed-modal-open");
-    };
-  }, []);
 
   //Calculating data of event
   const dateStr = info.eventDate;
@@ -362,12 +356,21 @@ const EventModal = (props) => {
   const url = window.location.href;
 
   return (
-    <div className="fed-modal-root">
-      <div className="fed-modal-overlay" onClick={handleModalClose}></div>
+    <Dialog
+      open
+      size="xl"
+      onOpenChange={(next) => {
+        if (!next) handleModalClose();
+      }}
+      contentStyle={{
+        "--dialog-padding": "0",
+        "--dialog-surface": "transparent",
+        "--dialog-border": "none",
+        "--dialog-shadow": "none",
+      }}
+    >
       <div
-        className="fed-modal-surface"
         style={{
-          zIndex: "1201",
           borderRadius: "18px",
           padding: "2rem",
           position: "relative",
@@ -377,7 +380,6 @@ const EventModal = (props) => {
           maxWidth: "820px",
           width: "92vw",
         }}
-        onClick={(e) => e.stopPropagation()}
       >
           {data && (
             <>
@@ -593,10 +595,9 @@ const EventModal = (props) => {
               {isOpen && <Share onClose={handleShare} urlpath={url} />}
             </>
           )}
-        </div>
-        {/* </div> */}
+      </div>
       <Alert />
-    </div>
+    </Dialog>
   );
 };
 

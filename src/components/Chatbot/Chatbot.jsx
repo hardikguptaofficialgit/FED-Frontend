@@ -177,8 +177,8 @@ const Chatbot = () => {
                 const emailResponse = {
                     id: messages.length + 2,
                     text: emailResult.success
-                        ? '✅ Your message has been sent to FED! The team will get back to you soon. 📧'
-                        : '❌ Sorry, there was an error sending your email. Please try again later.',
+                        ? '  Your message has been sent to FED! The team will get back to you soon. 📧'
+                        : ' Sorry, there was an error sending your email. Please try again later.',
                     isUser: false,
                     timestamp: new Date(),
                 };

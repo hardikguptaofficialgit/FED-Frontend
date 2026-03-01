@@ -27,7 +27,6 @@ const EventCard = (props) => {
     data,
     onOpen = () => {},
     type,
-    modalpath,
     customStyles = {},
     showShareButton = true,
     showRegisterButton = true,
@@ -36,7 +35,7 @@ const EventCard = (props) => {
     onEdit,
     onDelete,
     enableEdit,
-    isLoading,
+    isLoading = false,
     isRegisteredInRelatedEvents,
     eventName,
   } = props;
@@ -359,7 +358,7 @@ const EventCard = (props) => {
   }
 
   return (
-    <div>
+    <div className={style.cardWrapper}>
       <div
         onMouseEnter={() => setisHovered(true)}
         onMouseLeave={() => setisHovered(false)}
@@ -531,7 +530,7 @@ const EventCard = (props) => {
                     <>
                       <div
                         style={{ fontSize: "0.9rem", cursor: "pointer" }}
-                        onClick={() => setIsTeamDetailsOpen(true)}
+                        onClick={() => navigate(`/Events/${data.id}/team`)}
                       >
                         Team Details
                       </div>
@@ -582,7 +581,7 @@ const EventCard = (props) => {
             <div className={style.EventDesc} style={customStyles.EventDesc}>
               {info.eventdescription}
             </div>
-            <Link to={modalpath + data.id}>
+            <Link to={`/Events/${data.id}/details`}>
               <span
                 onClick={handleCloseShare}
                 className={style.seeMore}
@@ -632,7 +631,7 @@ const EventCard = (props) => {
               );
               if (isConfirmed && onDelete) {
                 authCtx.eventData = data;
-                onDelete();
+                onDelete(data.id);
               }
             }}
             variant="secondary"
@@ -666,15 +665,15 @@ EventCard.propTypes = {
   data: PropTypes.object.isRequired,
   onOpen: PropTypes.func,
   type: PropTypes.string.isRequired,
-  modalpath: PropTypes.string.isRequired,
   customStyles: PropTypes.object,
   showShareButton: PropTypes.bool,
   showRegisterButton: PropTypes.bool,
   additionalContent: PropTypes.node,
   aosDisable: PropTypes.bool,
   onEdit: PropTypes.func,
+  onDelete: PropTypes.func,
   enableEdit: PropTypes.bool,
-  isLoading: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool,
 };
 
 export default EventCard;

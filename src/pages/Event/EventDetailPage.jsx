@@ -10,7 +10,9 @@ import { PiClockCountdownDuotone } from "react-icons/pi";
 import { IoIosLock } from "react-icons/io";
 import AuthContext from "../../context/AuthContext";
 import { Blurhash } from "react-blurhash";
-import { Alert, ComponentLoading } from "../../microInteraction";
+import { Alert } from "../../microInteraction";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import { api } from "../../services";
 import { parse, differenceInMilliseconds } from "date-fns";
 
@@ -154,7 +156,45 @@ const EventDetailPage = () => {
                     </button>
 
                     {isLoading ? (
-                        <ComponentLoading customStyles={{ width: "100%", height: "60vh", display: "flex", justifyContent: "center", alignItems: "center" }} />
+                        <SkeletonTheme baseColor="#141414" highlightColor="#1f1f1f" duration={1.6}>
+                            <div style={containerStyle}>
+                                <div style={leftColStyle}>
+                                    <div style={bannerWrapStyle}>
+                                        <Skeleton height="100%" width="100%" borderRadius={20} />
+                                    </div>
+                                    <div style={titleContainerStyle}>
+                                        <Skeleton height={36} width="58%" />
+                                        <div style={metaRowStyle}>
+                                            <Skeleton height={28} width={140} borderRadius={24} />
+                                            <Skeleton height={28} width={120} borderRadius={24} />
+                                        </div>
+                                    </div>
+                                    <div style={sectionStyle}>
+                                        <Skeleton height={22} width="38%" />
+                                        <Skeleton height={2} width="60%" />
+                                        <Skeleton count={5} height={16} />
+                                    </div>
+                                    <div style={sectionStyle}>
+                                        <Skeleton height={22} width="34%" />
+                                        <Skeleton height={2} width="55%" />
+                                        <Skeleton count={4} height={18} />
+                                    </div>
+                                </div>
+                                <div style={rightColStyle}>
+                                    <div style={regPanelStyle}>
+                                        <Skeleton height={26} width="60%" />
+                                        <Skeleton count={3} height={14} />
+                                        <div style={regInfoWrapStyle}>
+                                            <Skeleton height={16} width="80%" />
+                                            <Skeleton height={16} width="70%" />
+                                            <Skeleton height={16} width="75%" />
+                                        </div>
+                                        <Skeleton height={48} borderRadius={12} />
+                                        <Skeleton height={36} borderRadius={12} />
+                                    </div>
+                                </div>
+                            </div>
+                        </SkeletonTheme>
                     ) : !data ? (
                         <div style={{ color: "white", textAlign: "center", marginTop: "4rem", fontSize: "1.2rem" }}>Event not found.</div>
                     ) : (

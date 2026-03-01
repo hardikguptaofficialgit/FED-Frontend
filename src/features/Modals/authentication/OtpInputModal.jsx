@@ -1,60 +1,49 @@
-import React, { useEffect } from "react";
+import React from "react";
 import OtpInput from "../../../components/OtpInput/OtpInput";
 import { X } from "lucide-react";
+import { Dialog } from "../../../components";
+import modalCard from "../../../components/ui/ModalCard.module.scss";
 
 const OtpInputModal = (props) => {
   const { onVerify, handleClose } = props;
 
-  useEffect(() => {
-    document.body.classList.add("fed-modal-open");
-    return () => {
-      document.body.classList.remove("fed-modal-open");
-    };
-  }, []);
-
   return (
-    <div className="fed-modal-root">
-      <div
-        className="fed-modal-overlay"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        onClick={handleClose}
-      >
-        <div
-          className="fed-modal-surface"
-          style={{ width: "min(520px, 92vw)", position: "relative" }}
-          onClick={(e) => e.stopPropagation()}
-        >
+    <Dialog
+      open
+      size="sm"
+      onOpenChange={(next) => {
+        if (!next) handleClose();
+      }}
+      contentStyle={{
+        "--dialog-padding": "0",
+        "--dialog-surface": "transparent",
+        "--dialog-border": "none",
+        "--dialog-shadow": "none",
+      }}
+    >
+      <div className={`${modalCard.card} ${modalCard.cardLg}`}>
+        <div className={modalCard.header}>
+          <div>
+            <div className={modalCard.title}>OTP Verification</div>
+            <div className={modalCard.subtitle}>Enter the code to continue</div>
+          </div>
           <button
             type="button"
             onClick={handleClose}
-            style={{
-              position: "absolute",
-              top: "0.6rem",
-              right: "0.6rem",
-              zIndex: 10,
-              background: "transparent",
-              border: "1px solid rgba(255, 255, 255, 0.15)",
-              color: "#fff",
-              borderRadius: "8px",
-              padding: "0.35rem",
-              cursor: "pointer",
-            }}
+            className={modalCard.closeBtn}
             aria-label="Close"
           >
-            <X />
+            <X size={18} />
           </button>
-          <OtpInput
-            isSignUp={true}
-            onHandleVerfiy={onVerify}
-            handleClose={handleClose}
-          />
         </div>
+        <div className={modalCard.divider} />
+        <OtpInput
+          isSignUp={true}
+          onHandleVerfiy={onVerify}
+          handleClose={handleClose}
+        />
       </div>
-    </div>
+    </Dialog>
   );
 };
 

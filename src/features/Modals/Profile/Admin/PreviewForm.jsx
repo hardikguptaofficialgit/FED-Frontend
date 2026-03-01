@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./styles/Preview.module.scss";
 import AuthContext from "../../../../context/AuthContext";
-import { Button, Text } from "../../../../components";
+import { Button, Dialog, Text } from "../../../../components";
 import Section from "./SectionModal";
 import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
@@ -67,18 +67,6 @@ const PreviewForm = ({
       setIsLoading(false);
     }, 1000);
   }, []);
-
-  useEffect(() => {
-    if (open && !inline) {
-      document.body.classList.add(styles.noScroll);
-    } else {
-      document.body.classList.remove(styles.noScroll);
-    }
-
-    return () => {
-      document.body.classList.remove(styles.noScroll);
-    };
-  }, [open, inline]);
 
   useEffect(() => {
     constructSections();
@@ -585,7 +573,7 @@ const PreviewForm = ({
             />
           )}
 
-          {/* ✅ Download & Copy Buttons */}
+          {/*   Download & Copy Buttons */}
           <div style={{ display: "flex", gap: "10px", marginTop: 10 }}>
             <Button onClick={handleDownloadQR}>Download QR</Button>
             <Button onClick={handleCopyUPIID}>Copy UPI ID</Button>
@@ -614,147 +602,279 @@ const PreviewForm = ({
 
   return (
     <>
-      {open && (
-      <div
-        className={`${inline ? styles.pagePreview : styles.mainPreview} ${
-          inline ? "" : "fed-modal-root"
-        }`}
-      >
-        {!inline && <div className="fed-modal-overlay" onClick={handleClose}></div>}
-        <div
-          className={`${inline ? styles.pagePreviewWrapper : styles.previewContainerWrapper} ${
-            inline ? "" : "fed-modal-surface"
-          }`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div
-            ref={wrapperRef}
-            className={`${styles.previewContainer} ${
-              inline ? styles.inlineContainer : ""
-            }`}
-          >
-            {showCloseBtn && (
-              <button
-                type="button"
-                onClick={handleClose}
-                className={styles.closeBtn}
-                aria-label="Close"
+      {open &&
+        (inline ? (
+          <div className={styles.pagePreview}>
+            <div className={styles.pagePreviewWrapper}>
+              <div
+                ref={wrapperRef}
+                className={`${styles.previewContainer} ${styles.inlineContainer}`}
               >
-                <X />
-              </button>
-            )}
-            <div className={styles.formHeader}>
-              <div className={styles.formTitle}>
-                {eventData?.eventTitle || "Preview Event"}
-              </div>
-              <div className={styles.formSubtitle}>
-                Complete the registration form to secure your spot.
-              </div>
-            </div>
-            {isLoading ? (
-              <ComponentLoading
-                customStyles={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginLeft: "0rem",
-                  marginTop: "5rem",
-                }}
-              />
-            ) : !isCompleted.includes("Submitted") ? (
-              <div style={{ width: "100%" }}>
-                <div className={styles.sectionHeader}>
-                  <div className={styles.sectionTitle}>{currentSection.name}</div>
-                  <div className={styles.sectionDesc}>
-                    {currentSection.description}
+                {showCloseBtn && (
+                  <button
+                    type="button"
+                    onClick={handleClose}
+                    className={styles.closeBtn}
+                    aria-label="Close"
+                  >
+                    <X />
+                  </button>
+                )}
+                <div className={styles.formHeader}>
+                  <div className={styles.formTitle}>
+                    {eventData?.eventTitle || "Preview Event"}
+                  </div>
+                  <div className={styles.formSubtitle}>
+                    Complete the registration form to secure your spot.
                   </div>
                 </div>
-                {renderPaymentScreen()}
-                <Section section={currentSection} handleChange={handleChange} />
-                <div className={styles.formActions}>
-                  {inboundList() && inboundList().backSection && (
-                    <Button onClick={onBack}>
-                      Back
-                    </Button>
-                  )}
-                  <Button
-                    onClick={
-                      inboundList() && inboundList().nextSection
-                        ? onNext
-                        : handleSubmit
-                    }
+                {isLoading ? (
+                  <ComponentLoading
+                    customStyles={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginLeft: "0rem",
+                      marginTop: "5rem",
+                    }}
+                  />
+                ) : !isCompleted.includes("Submitted") ? (
+                  <div style={{ width: "100%" }}>
+                    <div className={styles.sectionHeader}>
+                      <div className={styles.sectionTitle}>
+                        {currentSection.name}
+                      </div>
+                      <div className={styles.sectionDesc}>
+                        {currentSection.description}
+                      </div>
+                    </div>
+                    {renderPaymentScreen()}
+                    <Section section={currentSection} handleChange={handleChange} />
+                    <div className={styles.formActions}>
+                      {inboundList() && inboundList().backSection && (
+                        <Button onClick={onBack}>Back</Button>
+                      )}
+                      <Button
+                        onClick={
+                          inboundList() && inboundList().nextSection
+                            ? onNext
+                            : handleSubmit
+                        }
+                      >
+                        {inboundList() && inboundList().nextSection ? (
+                          "Next"
+                        ) : isMicroLoading ? (
+                          <MicroLoading />
+                        ) : (
+                          "Submit"
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                ) : isSuccess ? (
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                    }}
                   >
-                    {inboundList() && inboundList().nextSection ? (
-                      "Next"
-                    ) : isMicroLoading ? (
-                      <MicroLoading />
-                    ) : (
-                      "Submit"
-                    )}
-                  </Button>
+                    <img
+                      src={Complete}
+                      alt="Complete"
+                      style={{ width: "400px", height: "400px", margin: "auto" }}
+                    />
+                    <Text
+                      variant="secondary"
+                      style={{
+                        width: "60%",
+                        fontSize: "14px",
+                        alignSelf: "center",
+                        textAlign: "center",
+                        marginTop: "16px",
+                        userSelect: "none",
+                      }}
+                    >
+                      Form Submitted Successfully! Thank you for your time.
+                    </Text>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text
+                      variant="secondary"
+                      style={{
+                        width: "60%",
+                        fontSize: "14px",
+                        alignSelf: "center",
+                        textAlign: "center",
+                        marginTop: "16px",
+                        userSelect: "none",
+                      }}
+                    >
+                      <h2 style={{ marginBottom: "3rem" }}>
+                        Error Submitting your Form
+                      </h2>
+                      There is an error submitting the form. If you have made any
+                      payment, please fill up your payment details again. There is
+                      no need to pay again.
+                    </Text>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <Dialog
+            open
+            size="xl"
+            onOpenChange={(next) => {
+              if (!next) handleClose();
+            }}
+            contentStyle={{
+              "--dialog-padding": "0",
+              "--dialog-surface": "transparent",
+              "--dialog-border": "none",
+              "--dialog-shadow": "none",
+            }}
+          >
+            <div className={styles.mainPreview}>
+              <div className={styles.previewContainerWrapper}>
+                <div ref={wrapperRef} className={styles.previewContainer}>
+                  {showCloseBtn && (
+                    <button
+                      type="button"
+                      onClick={handleClose}
+                      className={styles.closeBtn}
+                      aria-label="Close"
+                    >
+                      <X />
+                    </button>
+                  )}
+                  <div className={styles.formHeader}>
+                    <div className={styles.formTitle}>
+                      {eventData?.eventTitle || "Preview Event"}
+                    </div>
+                    <div className={styles.formSubtitle}>
+                      Complete the registration form to secure your spot.
+                    </div>
+                  </div>
+                  {isLoading ? (
+                    <ComponentLoading
+                      customStyles={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginLeft: "0rem",
+                        marginTop: "5rem",
+                      }}
+                    />
+                  ) : !isCompleted.includes("Submitted") ? (
+                    <div style={{ width: "100%" }}>
+                      <div className={styles.sectionHeader}>
+                        <div className={styles.sectionTitle}>
+                          {currentSection.name}
+                        </div>
+                        <div className={styles.sectionDesc}>
+                          {currentSection.description}
+                        </div>
+                      </div>
+                      {renderPaymentScreen()}
+                      <Section section={currentSection} handleChange={handleChange} />
+                      <div className={styles.formActions}>
+                        {inboundList() && inboundList().backSection && (
+                          <Button onClick={onBack}>Back</Button>
+                        )}
+                        <Button
+                          onClick={
+                            inboundList() && inboundList().nextSection
+                              ? onNext
+                              : handleSubmit
+                          }
+                        >
+                          {inboundList() && inboundList().nextSection ? (
+                            "Next"
+                          ) : isMicroLoading ? (
+                            <MicroLoading />
+                          ) : (
+                            "Submit"
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  ) : isSuccess ? (
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <img
+                        src={Complete}
+                        alt="Complete"
+                        style={{
+                          width: "400px",
+                          height: "400px",
+                          margin: "auto",
+                        }}
+                      />
+                      <Text
+                        variant="secondary"
+                        style={{
+                          width: "60%",
+                          fontSize: "14px",
+                          alignSelf: "center",
+                          textAlign: "center",
+                          marginTop: "16px",
+                          userSelect: "none",
+                        }}
+                      >
+                        Form Submitted Successfully! Thank you for your time.
+                      </Text>
+                    </div>
+                  ) : (
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Text
+                        variant="secondary"
+                        style={{
+                          width: "60%",
+                          fontSize: "14px",
+                          alignSelf: "center",
+                          textAlign: "center",
+                          marginTop: "16px",
+                          userSelect: "none",
+                        }}
+                      >
+                        <h2 style={{ marginBottom: "3rem" }}>
+                          Error Submitting your Form
+                        </h2>
+                        There is an error submitting the form. If you have made
+                        any payment, please fill up your payment details again.
+                        There is no need to pay again.
+                      </Text>
+                    </div>
+                  )}
                 </div>
               </div>
-            ) : isSuccess ? (
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                <img
-                  src={Complete}
-                  alt="Complete"
-                  style={{ width: "400px", height: "400px", margin: "auto" }}
-                />
-                <Text
-                  variant="secondary"
-                  style={{
-                    width: "60%",
-                    fontSize: "14px",
-                    alignSelf: "center",
-                    textAlign: "center",
-                    marginTop: "16px",
-                    userSelect: "none",
-                  }}
-                >
-                  Form Submitted Successfully! Thank you for your time.
-                </Text>
-              </div>
-            ) : (
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                <Text
-                  variant="secondary"
-                  style={{
-                    width: "60%",
-                    fontSize: "14px",
-                    alignSelf: "center",
-                    textAlign: "center",
-                    marginTop: "16px",
-                    userSelect: "none",
-                  }}
-                >
-                  <h2 style={{ marginBottom: "3rem" }}>
-                    Error Submitting your Form
-                  </h2>
-                  There is an error submitting the form. If you have made any
-                  payment, please fill up your payment details again. There is
-                  no need to pay again.
-                </Text>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-      )}
+            </div>
+          </Dialog>
+        ))}
       <Alert />
     </>
   );

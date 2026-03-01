@@ -114,9 +114,9 @@ const Topbar = ({
       <div className={styles.actions}>
         {authCtx.isLoggedIn ? (
           <>
-            <button type="button" className={styles.iconButton} aria-label="Notifications">
+            {/* <button type="button" className={styles.iconButton} aria-label="Notifications">
               <FiBell size={18} />
-            </button>
+            </button> */}
             <div className={styles.userMenuWrap} ref={menuRef}>
               <button
                 type="button"

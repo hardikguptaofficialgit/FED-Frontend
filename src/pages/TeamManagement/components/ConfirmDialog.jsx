@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styles from "../styles/TeamManagement.module.scss";
+import { Dialog } from "../../../components";
+import modalCard from "../../../components/ui/ModalCard.module.scss";
 
 const ConfirmDialog = ({ isOpen, title, message, confirmText, onConfirm, onCancel }) => {
     const [loading, setLoading] = useState(false);
@@ -16,8 +18,20 @@ const ConfirmDialog = ({ isOpen, title, message, confirmText, onConfirm, onCance
     };
 
     return (
-        <div className={styles.dialogOverlay} onClick={onCancel}>
-            <div className={styles.dialogContent} onClick={(e) => e.stopPropagation()}>
+        <Dialog
+            open={isOpen}
+            size="sm"
+            onOpenChange={(next) => {
+                if (!next) onCancel();
+            }}
+            contentStyle={{
+                "--dialog-padding": "0",
+                "--dialog-surface": "transparent",
+                "--dialog-border": "none",
+                "--dialog-shadow": "none",
+            }}
+        >
+            <div className={`${styles.dialogContent} ${modalCard.card}`}>
                 <h3 className={styles.dialogTitle}>{title}</h3>
                 <p className={styles.dialogMessage}>{message}</p>
                 <div className={styles.dialogActions}>
@@ -37,7 +51,7 @@ const ConfirmDialog = ({ isOpen, title, message, confirmText, onConfirm, onCance
                     </button>
                 </div>
             </div>
-        </div>
+        </Dialog>
     );
 };
 

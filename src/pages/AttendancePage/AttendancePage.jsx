@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { EventCard } from "../../components";
+import { Dialog, EventCard } from "../../components";
+import modalCard from "../../components/ui/ModalCard.module.scss";
 import { Button } from "../../components/Core";
 import AuthContext from "../../context/AuthContext";
 import { api } from "../../services";
@@ -336,9 +337,20 @@ const AttendancePage = () => {
 
       {/* Success Modal */}
       {showSuccessModal && attendedUser && (
-        <div className={`${styles.scannerModal} fed-modal-root`}>
-          <div className="fed-modal-overlay" onClick={handleCloseSuccessModal}></div>
-          <div className={`${styles.scannerContent} fed-modal-surface`}>
+        <Dialog
+          open
+          size="sm"
+          onOpenChange={(next) => {
+            if (!next) handleCloseSuccessModal();
+          }}
+          contentStyle={{
+            "--dialog-padding": "0",
+            "--dialog-surface": "transparent",
+            "--dialog-border": "none",
+            "--dialog-shadow": "none",
+          }}
+        >
+          <div className={`${styles.scannerContent} ${modalCard.card}`}>
             <button
               className={styles.closeButton}
               onClick={handleCloseSuccessModal}
@@ -360,7 +372,7 @@ const AttendancePage = () => {
               </div>
             </div>
           </div>
-        </div>
+        </Dialog>
       )}
 
       {/* Ongoing Events */}

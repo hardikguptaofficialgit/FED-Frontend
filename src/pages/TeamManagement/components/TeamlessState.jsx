@@ -160,7 +160,7 @@ const TeamlessState = ({ formId, eventTitle, maxTeamSize, onTeamJoined }) => {
     return (
         <div className={styles.teamlessContainer}>
             <div className={styles.teamlessHeader}>
-                <h2>🏆 {eventTitle}</h2>
+                <h2>  {eventTitle}</h2>
                 <p>You're registered! Now create or join a team to participate.</p>
             </div>
 
@@ -224,7 +224,7 @@ const TeamlessState = ({ formId, eventTitle, maxTeamSize, onTeamJoined }) => {
                                     <div className={styles.teamCardAction}>
                                         {team.hasPendingRequest ? (
                                             <button className={styles.pendingButton} disabled>
-                                                Pending ⏳
+                                                Pending   
                                             </button>
                                         ) : (
                                             <button
@@ -279,4 +279,3 @@ const TeamlessState = ({ formId, eventTitle, maxTeamSize, onTeamJoined }) => {
 };
 
 export default TeamlessState;
-

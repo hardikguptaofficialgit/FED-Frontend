@@ -189,13 +189,9 @@ export default function Footer() {
               </Link>
             </div>
             <div className={styles.tnpMDiv}>
-<<<<<<< HEAD
-              <p className={styles.copyrightPTag}>© {new Date().getFullYear()}, fedkiit</p>
-=======
               <p className={styles.copyrightPTag}>
                 © {currentYear}, FEDKIIT
               </p>
->>>>>>> origin/main
             </div>
             {/* <div className={styles.dotDiv}></div> */}
           </div>
