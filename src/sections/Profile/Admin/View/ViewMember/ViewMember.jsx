@@ -9,7 +9,7 @@ import { Alert, ComponentLoading } from "../../../../../microInteraction";
 
 // Domain tabs configuration — order matters for display
 const DOMAIN_TABS = [
-  { key: "board", label: "Board" },
+  { key: "board", label: "BOD" },
   { key: "technical", label: "Technical" },
   { key: "creative", label: "Creative" },
   { key: "marketing", label: "Marketing" },
@@ -186,7 +186,19 @@ function ViewMember() {
 
             <div className={styles.headerActions}>
               <div className={styles.searchContainer}>
-                <span className={styles.searchIcon}>🔍</span>
+                <svg
+                  className={styles.searchIcon}
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
                 <input
                   type="text"
                   placeholder="Search members..."
